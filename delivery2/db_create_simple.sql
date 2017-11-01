@@ -67,8 +67,7 @@ CREATE TABLE request (
   doctor_id int NOT NULL,
   date date NOT NULL,
   PRIMARY KEY (number),
-  FOREIGN KEY (patient_id) REFERENCES patient (number),
-  FOREIGN KEY (doctor_id) REFERENCES doctor (doctor_id)
+  FOREIGN KEY (patient_id,doctor_id) REFERENCES doctor (number,doctor_id)
 );
 
 DROP TABLE IF EXISTS sensor;

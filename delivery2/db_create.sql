@@ -127,8 +127,7 @@ ALTER TABLE region
 
 ALTER TABLE request
   ADD PRIMARY KEY (number),
-  ADD KEY patient_id (patient_id),
-  ADD KEY doctor_id (doctor_id);
+  ADD KEY patient_id (patient_id,doctor_id);
 
 ALTER TABLE sensor
   ADD PRIMARY KEY (snum,manuf),
@@ -174,8 +173,7 @@ ALTER TABLE region
   ADD CONSTRAINT region_ibfk_1 FOREIGN KEY (series_id,elem_index) REFERENCES element (series_id, elem_index);
 
 ALTER TABLE request
-  ADD CONSTRAINT request_ibfk_1 FOREIGN KEY (patient_id) REFERENCES patient (number),
-  ADD CONSTRAINT request_ibfk_2 FOREIGN KEY (doctor_id) REFERENCES doctor (doctor_id);
+  ADD CONSTRAINT request_ibfk_1 FOREIGN KEY (patient_id,doctor_id) REFERENCES doctor (number, doctor_id);
 
 ALTER TABLE sensor
   ADD CONSTRAINT sensor_ibfk_1 FOREIGN KEY (snum,manuf) REFERENCES device (serialnum, manufacturer);
