@@ -7,22 +7,26 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 
+DROP TABLE IF EXISTS device;
 CREATE TABLE device (
   serialnum varchar(255) COLLATE latin1_general_ci NOT NULL,
   manufacturer varchar(255) COLLATE latin1_general_ci NOT NULL,
   model varchar(255) COLLATE latin1_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
+DROP TABLE IF EXISTS doctor;
 CREATE TABLE doctor (
   doctor_id int(11) NOT NULL,
   number int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
+DROP TABLE IF EXISTS element;
 CREATE TABLE element (
   series_id int(11) NOT NULL,
   elem_index int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
+DROP TABLE IF EXISTS patient;
 CREATE TABLE patient (
   number int(11) NOT NULL,
   name varchar(255) COLLATE latin1_general_ci NOT NULL,
@@ -30,11 +34,13 @@ CREATE TABLE patient (
   address varchar(255) COLLATE latin1_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
+DROP TABLE IF EXISTS period;
 CREATE TABLE period (
   start datetime NOT NULL,
   end datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
+DROP TABLE IF EXISTS reading;
 CREATE TABLE reading (
   snum varchar(255) COLLATE latin1_general_ci NOT NULL,
   manuf varchar(255) COLLATE latin1_general_ci NOT NULL,
@@ -42,6 +48,7 @@ CREATE TABLE reading (
   value float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
+DROP TABLE IF EXISTS region;
 CREATE TABLE region (
   series_id int(11) NOT NULL,
   elem_index int(11) NOT NULL,
@@ -51,6 +58,7 @@ CREATE TABLE region (
   y2 float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
+DROP TABLE IF EXISTS request;
 CREATE TABLE request (
   number int(11) NOT NULL,
   patient_id int(11) NOT NULL,
@@ -58,12 +66,14 @@ CREATE TABLE request (
   date date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
+DROP TABLE IF EXISTS sensor;
 CREATE TABLE sensor (
   snum varchar(255) COLLATE latin1_general_ci NOT NULL,
   manuf varchar(255) COLLATE latin1_general_ci NOT NULL,
   units varchar(255) COLLATE latin1_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
+DROP TABLE IF EXISTS series;
 CREATE TABLE series (
   series_id int(11) NOT NULL,
   name varchar(255) COLLATE latin1_general_ci NOT NULL,
@@ -72,6 +82,7 @@ CREATE TABLE series (
   description varchar(255) COLLATE latin1_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
+DROP TABLE IF EXISTS study;
 CREATE TABLE study (
   request_number int(11) NOT NULL,
   description varchar(255) COLLATE latin1_general_ci NOT NULL,
@@ -81,6 +92,7 @@ CREATE TABLE study (
   manufacturer varchar(255) COLLATE latin1_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
+DROP TABLE IF EXISTS wears;
 CREATE TABLE wears (
   start datetime NOT NULL,
   end datetime NOT NULL,
@@ -119,6 +131,7 @@ ALTER TABLE request
   ADD KEY doctor_id (doctor_id);
 
 ALTER TABLE sensor
+  ADD PRIMARY KEY (snum,manuf),
   ADD KEY snum (snum,manuf);
 
 ALTER TABLE series
