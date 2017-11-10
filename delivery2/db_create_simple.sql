@@ -126,3 +126,34 @@ ALTER TABLE request
   MODIFY number int NOT NULL AUTO_INCREMENT;
 ALTER TABLE series
   MODIFY series_id int NOT NULL AUTO_INCREMENT;
+
+/* Triggers (need to be created for insertion and update): 
+			1.Create and update period (our addition).
+			2.The doctor who prescribes is not the same that performs the exam
+			3.A device cannot be associated to a patient in overlapping periods
+			*/
+DROP TRIGGER IF EXISTS check_period_insert;
+DELIMITER $$
+CREATE TRIGGER check_period_insert BEFORE INSERT ON period
+FOR EACH row
+BEGIN 
+	IF DATEDIFF(new.end,new.start) < 0 then /* two comparisons due to the second variable overload*/
+		SIGNAL SQLSTATE '45000' set message_text = 'The period is not valid';
+	END IF;	 
+
+END;
+$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS check_period_update;
+DELIMITER $$
+CREATE TRIGGER check_period_update BEFORE UPDATE ON period
+FOR EACH row
+BEGIN 
+	IF DATEDIFF(new.end,new.start) < 0 then /* two comparisons due to the second variable overload*/
+		SIGNAL SQLSTATE '45000' set message_text = 'The period is not valid';
+	END IF;	 
+
+END;
+$$
+DELIMITER ;
