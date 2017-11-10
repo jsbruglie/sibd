@@ -137,7 +137,7 @@ DELIMITER $$
 CREATE TRIGGER check_period_insert BEFORE INSERT ON period
 FOR EACH row
 BEGIN 
-	IF DATEDIFF(new.end,new.start) < 0 then /* two comparisons due to the second variable overload*/
+	IF DATEDIFF(new.end,new.start) < 0 then
 		SIGNAL SQLSTATE '45000' set message_text = 'The period is not valid';
 	END IF;	 
 
@@ -150,7 +150,7 @@ DELIMITER $$
 CREATE TRIGGER check_period_update BEFORE UPDATE ON period
 FOR EACH row
 BEGIN 
-	IF DATEDIFF(new.end,new.start) < 0 then /* two comparisons due to the second variable overload*/
+	IF DATEDIFF(new.end,new.start) < 0 then 
 		SIGNAL SQLSTATE '45000' set message_text = 'The period is not valid';
 	END IF;	 
 
