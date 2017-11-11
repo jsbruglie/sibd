@@ -130,7 +130,8 @@ ALTER TABLE series
 /* Triggers (need to be created for insertion and update): 
 			1.Create and update period (our addition-since it makes the 3rd trigger easier). - done
 			2.The doctor who prescribes is not the same that performs the exam - done
-			3.A device cannot be associated to a patient in overlapping periods
+			3.A device cannot be associated to a patient in overlapping periods, the patient may have several devices at the same time
+			but a device is only associanted to one patient during on period.
 			*/
 DROP TRIGGER IF EXISTS check_period_insert;
 DELIMITER $$
@@ -197,7 +198,8 @@ FOR EACH row
 BEGIN
 	IF EXISTS (SELECT *
 		FROM wears
-		WHERE patient = new.patient
+		WHERE snum = new.snum
+		AND manuf = new.manuf
 		AND new.start < end
 		AND new.end > start) THEN
 		SIGNAL SQLSTATE '45000' set message_text = 'There exists an overlapping period.';
@@ -209,12 +211,13 @@ DELIMITER ;
 
 DROP TRIGGER IF EXISTS check_overlap_update;
 DELIMITER $$
-CREATE TRIGGER check_overlap_insert BEFORE UPDATE ON wears
+CREATE TRIGGER check_overlap_update BEFORE UPDATE ON wears
 FOR EACH row
 BEGIN
 	IF EXISTS (SELECT *
 		FROM wears
-		WHERE patient = new.patient
+		WHERE snum = new.snum
+		AND manuf = new.manuf
 		AND new.start < end
 		AND new.end > start) THEN
 		SIGNAL SQLSTATE '45000' set message_text = 'There exists an overlapping period.';
@@ -223,3 +226,44 @@ BEGIN
 END;
 $$
 DELIMITER ;
+
+/*Function: Receives a series id and an index (for Region A), also receives x1,y1,x2,y2 (Region B) and checks
+			if the any region of the element A overlaps with B, returns true.
+*/
+/*
+DROP FUNCTION IF EXISTS region_overlaps_element;
+DELIMITER $$
+CREATE FUNCTION region_overlaps_element(series_id int,index int,x1 float,y1 float,x2 float,y2 float)
+RETURNS BOOLEAN
+BEGIN
+
+
+END
+$$
+DELIMITER ;
+
+
+/*
+DELIMITER $$
+CREATE FUNCTION overlap_rect( x1a FLOAT(4), y1a FLOAT(4) , x2a FLOAT(4) , y2a FLOAT(4) , x1b FLOAT(4) , x2b FLOAT(4) , y1b FLOAT(4) ,  y2b FLOAT(4) )
+RETURNS BOOLEAN
+BEGIN
+IF ( (x2a < x1b) OR (x2b < x1a) ) THEN RETURN FALSE;
+END IF;
+IF( (y1a > y2b) OR (y1b > y2a) ) THEN RETURN FALSE;
+END IF;
+RETURN TRUE;
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE FUNCTION overlap_serie(serie_id_a VARCHAR(255),serie_id_b VARCHAR(255))
+RETURNS BOOLEAN
+BEGIN
+RETURN EXISTS (SELECT series_id FROM region AS r1, region AS r2
+WHERE (r1.series_id = serie_id_a)
+AND (r2.series_id = serie_id_b)
+AND overlap_rect(r1.x1,r1.y1,r1.x2,r1.y2,r2.x1,r2.y1,r2.x2,r2.y2));
+END $$
+DELIMITER ;
+*/

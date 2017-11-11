@@ -31,6 +31,7 @@ INSERT INTO `element` (`series_id`, `elem_index`) VALUES
 
 INSERT INTO `period` (`start`, `end`) VALUES
 ('2016-04-20 00:00:00', '2017-02-10 00:00:00');
+('2016-04-20 00:00:00', '2018-02-10 00:00:00');
 
 INSERT INTO `sensor` (`snum`, `manuf`, `units`) VALUES
 ('a87S17UT6b', 'Medtronic', 'LDL cholesterol in mg/dL'),
