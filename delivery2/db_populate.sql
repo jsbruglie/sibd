@@ -41,7 +41,7 @@ INSERT INTO `sensor` (`snum`, `manuf`, `units`) VALUES
 
 INSERT INTO `region` (`series_id`, `elem_index`, `x1`, `y1`, `x2`, `y2`) VALUES
 (1, 1, 0.2, 0.2, 0.4, 0.4),
-(1, 1, 0.6, 0.8, 0.8, 0.6);
+(1, 1, 0.6, 0.6, 0.8, 0.8);
 
 INSERT INTO `wears` (`start`, `end`, `snum`, `manuf`, `patient`) VALUES
 ('2016-04-20 00:00:00', '2017-02-10 00:00:00', 'a87S17UT6b', 'Medtronic', 1);
