@@ -30,8 +30,8 @@ INSERT INTO `element` (`series_id`, `elem_index`) VALUES
 (1, 3);
 
 INSERT INTO `period` (`start`, `end`) VALUES
-('2016-04-20 00:00:00', '2017-02-10 00:00:00');
-('2016-04-20 00:00:00', '2018-02-10 00:00:00');
+('2016-04-20 00:00:00', '2017-02-10 00:00:00'),
+('2017-04-20 00:00:00', '2017-11-11 00:00:00');
 
 INSERT INTO `sensor` (`snum`, `manuf`, `units`) VALUES
 ('a87S17UT6b', 'Medtronic', 'LDL cholesterol in mg/dL'),
@@ -39,9 +39,16 @@ INSERT INTO `sensor` (`snum`, `manuf`, `units`) VALUES
 ('svKAm324h3', 'Medtronic', 'LDL cholesterol in mg/dL'),
 ('wZVhG2FFGh', 'Zoom Medical', 'mV');
 
+INSERT INTO `reading` (`snum`, `manuf`, `datetime`,`value`) VALUES
+('a87S17UT6b', 'Medtronic','2017-02-09 00:00:00', '200'),
+('a87S17UT6b', 'Medtronic','2016-05-01 00:00:00', '200'),
+('a87S17UT6b', 'Medtronic','2017-11-05 00:00:00', '180'),
+('a87S17UT6b', 'Medtronic','2017-11-01 00:00:00', '160');
+
 INSERT INTO `region` (`series_id`, `elem_index`, `x1`, `y1`, `x2`, `y2`) VALUES
 (1, 1, 0.2, 0.2, 0.4, 0.4),
 (1, 1, 0.6, 0.6, 0.8, 0.8);
 
 INSERT INTO `wears` (`start`, `end`, `snum`, `manuf`, `patient`) VALUES
-('2016-04-20 00:00:00', '2017-02-10 00:00:00', 'a87S17UT6b', 'Medtronic', 1);
+('2016-04-20 00:00:00', '2017-02-10 00:00:00', 'a87S17UT6b', 'Medtronic', 1),
+('2017-04-20 00:00:00', '2017-11-11 00:00:00', 'a87S17UT6b', 'Medtronic', 2);
