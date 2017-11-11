@@ -37,7 +37,7 @@ CREATE TABLE request (
   number int NOT NULL,
   patient_id int NOT NULL,
   doctor_id int NOT NULL,
-  date date NOT NULL,
+  date_request date NOT NULL,
   PRIMARY KEY (number),
   FOREIGN KEY (patient_id,doctor_id) REFERENCES doctor (number,doctor_id)
 );

@@ -14,12 +14,12 @@ INSERT INTO `device` (`serialnum`, `manufacturer`, `model`) VALUES
 ('svKAm324h3', 'Medtronic', 'device 1'),
 ('wZVhG2FFGh', 'Zoom Medical', 'dev 1');
 
-INSERT INTO `request` (`number`, `patient_id`, `doctor_id`, `date`) VALUES
+INSERT INTO `request` (`number`, `patient_id`, `doctor_id`, `date_request`) VALUES
 (1, 1, 1, '2017-08-06');
 
 INSERT INTO `study` (`request_number`, `description`, `date`, `doctor_id`, `serial_number`, `manufacturer`) VALUES
-(1, 'LDL cholesterol analysis', '2017-08-30', 2, 'a87S17UT6b', 'Medtronic'),
-(1, 'Posture Analysis', '2017-09-13', 3, 'EuIeoloUxG', 'Vapor Medical');
+(1, 'LDL cholesterol analysis', '2016-08-30', 2, 'a87S17UT6b', 'Medtronic'),
+(1, 'Posture Analysis', '2016-09-13', 3, 'EuIeoloUxG', 'Vapor Medical');
 
 INSERT INTO `series` (`series_id`, `name`, `base_url`, `request_number`, `description`) VALUES
 (1, 'Posture analysis image collection', 'http://data_db.php?series_id=1', 1, 'Posture Analysis');

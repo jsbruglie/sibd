@@ -1,4 +1,5 @@
 /* 1st. patient name with the highest number of readings of units of "LDL cholesterol in mg/DL" in the past 90 days*/
+
 SELECT name,units,datetime, max(value) FROM reading natural join wears, sensor, patient
 WHERE datetime BETWEEN start AND end
 AND wears.snum = sensor.snum
