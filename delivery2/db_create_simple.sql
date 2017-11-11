@@ -128,8 +128,8 @@ ALTER TABLE series
   MODIFY series_id int NOT NULL AUTO_INCREMENT;
 
 /* Triggers (need to be created for insertion and update): 
-			1.Create and update period (our addition).
-			2.The doctor who prescribes is not the same that performs the exam
+			1.Create and update period (our addition-since it makes the 3rd trigger easier). - done
+			2.The doctor who prescribes is not the same that performs the exam - done
 			3.A device cannot be associated to a patient in overlapping periods
 			*/
 DROP TRIGGER IF EXISTS check_period_insert;
@@ -137,8 +137,8 @@ DELIMITER $$
 CREATE TRIGGER check_period_insert BEFORE INSERT ON period
 FOR EACH row
 BEGIN 
-	IF DATEDIFF(new.end,new.start) < 0 then
-		SIGNAL SQLSTATE '45000' set message_text = 'The period is not valid';
+	IF DATEDIFF(new.end,new.start) < 0 THEN
+		SIGNAL SQLSTATE '45000' set message_text = 'The period is not valid.';
 	END IF;	 
 
 END;
@@ -150,8 +150,74 @@ DELIMITER $$
 CREATE TRIGGER check_period_update BEFORE UPDATE ON period
 FOR EACH row
 BEGIN 
-	IF DATEDIFF(new.end,new.start) < 0 then 
-		SIGNAL SQLSTATE '45000' set message_text = 'The period is not valid';
+	IF DATEDIFF(new.end,new.start) < 0 THEN 
+		SIGNAL SQLSTATE '45000' set message_text = 'The period is not valid.';
+	END IF;	 
+
+END;
+$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS check_doctor_insert;
+DELIMITER $$
+CREATE TRIGGER check_doctor_insert BEFORE INSERT ON study
+FOR EACH row
+BEGIN 
+	IF EXISTS (SELECT * 
+		FROM request 
+		WHERE number = new.request_number 
+		AND doctor_id = new.doctor_id) THEN
+		SIGNAL SQLSTATE '45000' set message_text = 'That doctor cannot perform the exam.';
+	END IF;	 
+
+END;
+$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS check_doctor_update;
+DELIMITER $$
+CREATE TRIGGER check_doctor_update BEFORE UPDATE ON study
+FOR EACH row
+BEGIN 
+	IF EXISTS (SELECT * 
+		FROM request 
+		WHERE number = new.request_number 
+		AND doctor_id = new.doctor_id) THEN
+		SIGNAL SQLSTATE '45000' set message_text = 'That doctor cannot perform the exam.';
+	END IF;	 
+
+END;
+$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS check_overlap_insert;
+DELIMITER $$
+CREATE TRIGGER check_overlap_insert BEFORE INSERT ON wears
+FOR EACH row
+BEGIN
+	IF EXISTS (SELECT *
+		FROM wears
+		WHERE patient = new.patient
+		AND new.start < end
+		AND new.end > start) THEN
+		SIGNAL SQLSTATE '45000' set message_text = 'There exists an overlapping period.';
+	END IF;	 
+
+END;
+$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS check_overlap_update;
+DELIMITER $$
+CREATE TRIGGER check_overlap_insert BEFORE UPDATE ON wears
+FOR EACH row
+BEGIN
+	IF EXISTS (SELECT *
+		FROM wears
+		WHERE patient = new.patient
+		AND new.start < end
+		AND new.end > start) THEN
+		SIGNAL SQLSTATE '45000' set message_text = 'There exists an overlapping period.';
 	END IF;	 
 
 END;
