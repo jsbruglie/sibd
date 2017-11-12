@@ -71,8 +71,8 @@ BEGIN
 		FROM wears
 		WHERE snum = new.snum
 		AND manuf = new.manuf
-		AND DATEDIFF(end,new.start) < 0
-		AND DATEDIFF(start,new.end) > 0) THEN
+		AND DATEDIFF(end,new.start) > 0
+		AND DATEDIFF(start,new.end) < 0) THEN
 		SIGNAL SQLSTATE '45000' set message_text = 'There exists an overlapping period.';
 	END IF;	 
 
@@ -89,8 +89,8 @@ BEGIN
 		FROM wears
 		WHERE snum = new.snum
 		AND manuf = new.manuf
-		AND DATEDIFF(end,new.start) < 0
-		AND DATEDIFF(start,new.end) > 0) THEN
+		AND DATEDIFF(end,new.start) > 0
+		AND DATEDIFF(start,new.end) < 0) THEN
 		SIGNAL SQLSTATE '45000' set message_text = 'There exists an overlapping period.';
 	END IF;	 
 
