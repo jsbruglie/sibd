@@ -3,12 +3,12 @@ all devices	of manufacturer	“Medtronic”	in the past calendar year.
 -O paciente tem que usar todos os medtronics
 */
 
-SELECT name, date, manufacturer FROM study, request, patient
+SELECT name, manufacturer FROM study, request, patient
 WHERE YEAR(date) = YEAR(current_date - INTERVAL 1 YEAR)
 AND study.manufacturer = 'Medtronic'
 AND request.number = study.request_number
 AND request.patient_id = patient.number
 GROUP BY name
-HAVING COUNT(study.manufacturer)  = (SELECT COUNT(device.manufacturer) FROM device
+HAVING COUNT(distinct study.serial_number)  = (SELECT COUNT(device.manufacturer) FROM device
 	WHERE device.manufacturer = 'Medtronic'
 	);
