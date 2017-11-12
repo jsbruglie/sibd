@@ -5,6 +5,10 @@ all devices	of manufacturer	“Medtronic”	in the past calendar year.
 
 SELECT name, date, manufacturer FROM study, request, patient
 WHERE YEAR(date) = YEAR(current_date - INTERVAL 1 YEAR)
-AND manufacturer = 'Medtronic'
+AND study.manufacturer = 'Medtronic'
 AND request.number = study.request_number
-AND request.patient_id = patient.number;
+AND request.patient_id = patient.number
+GROUP BY name
+HAVING COUNT(study.manufacturer)  = (SELECT COUNT(device.manufacturer) FROM device
+	WHERE device.manufacturer = 'Medtronic'
+	);
