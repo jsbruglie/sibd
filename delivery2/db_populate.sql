@@ -49,7 +49,8 @@ INSERT INTO `reading` (`snum`, `manuf`, `datetime`,`value`) VALUES
 ('a87S17UT6b', 'Medtronic','2017-02-09 00:00:00', '200'),
 ('a87S17UT6b', 'Medtronic','2016-05-01 00:00:00', '200'),
 ('a87S17UT6b', 'Medtronic','2017-11-05 00:00:00', '180'),
-('a87S17UT6b', 'Medtronic','2017-11-01 00:00:00', '180');
+('a87S17UT6b', 'Medtronic','2017-11-01 00:00:00', '200'),
+('a87S17UT6b', 'Medtronic','2017-11-05 00:01:00', '200');
 
 INSERT INTO `region` (`series_id`, `elem_index`, `x1`, `y1`, `x2`, `y2`) VALUES
 (1, 1, 0.2, 0.2, 0.4, 0.4),
