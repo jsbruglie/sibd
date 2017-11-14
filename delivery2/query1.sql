@@ -10,6 +10,8 @@
 SELECT name FROM reading, wears, sensor, patient
 WHERE datetime BETWEEN start AND end
     AND wears.snum = sensor.snum
+    AND wears.start <= DATE(reading.datetime)
+    AND wears.end >= DATE(reading.datetime)
     AND patient.number = wears.patient
     AND value > 200
     AND datediff(current_date(), cast(datetime AS date)) <= 90
@@ -18,6 +20,8 @@ WHERE datetime BETWEEN start AND end
     HAVING count(*) >= all(SELECT count(*) FROM reading, wears, sensor, patient
         WHERE datetime BETWEEN start AND end
             AND wears.snum = sensor.snum
+            AND wears.start <= DATE(reading.datetime)
+            AND wears.end >= DATE(reading.datetime)
             AND patient.number = wears.patient
             AND value > 200
             AND datediff(current_date(), cast(datetime AS date)) <= 90
