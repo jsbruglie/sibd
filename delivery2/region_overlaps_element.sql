@@ -14,8 +14,8 @@ DELIMITER $$
 CREATE FUNCTION region_overlaps(x1a float, x2a float, y1a float, y2a float, x1b float, x2b float, y1b float, y2b float)
 RETURNS BOOLEAN
 BEGIN
-    IF (((x1a BETWEEN x1b AND x2b) OR (x2a BETWEEN x2b AND x2a)) AND
-        ((y1a BETWEEN y1b AND y2b) OR (y2a BETWEEN y2b AND y2a))) THEN
+    IF (((x1a BETWEEN x1b AND x2b) OR (x2a BETWEEN x1b AND x2b)) AND
+        ((y1a BETWEEN y1b AND y2b) OR (y2a BETWEEN y1b AND y2b))) THEN
         RETURN TRUE;
     ELSE
         RETURN FALSE;
