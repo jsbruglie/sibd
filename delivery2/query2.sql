@@ -7,7 +7,7 @@
 --              devices from the "Medtronic" manufacturer in the past calendar year 
 -- =================================================================================================
 
-SELECT name, manufacturer FROM study, request, patient
+SELECT name FROM study, request, patient
 WHERE YEAR(date) = YEAR(current_date - INTERVAL 1 YEAR)
     AND study.manufacturer = 'Medtronic'
     AND request.number = study.request_number
