@@ -1,3 +1,11 @@
+-- =================================================================================================
+-- Author:      Daniel Sousa
+--              Nuno Ferreira
+--              João Borrego
+--
+-- Description: Populates the database with dummy test entries
+-- =================================================================================================
+
 INSERT INTO `patient` (`number`, `name`, `birthday`, `address`) VALUES
 (1, 'Miley Dudley', '1977-12-07', 'Hillcrest Avenue'),
 (2, 'Alivia Mack', '1989-04-07', 'Depot Street'),
@@ -16,9 +24,9 @@ INSERT INTO `device` (`serialnum`, `manufacturer`, `model`) VALUES
 
 INSERT INTO `request` (`number`, `patient_id`, `doctor_id`, `date_request`) VALUES
 (1, 1, 1, '2016-08-06'),
-(2,3,3,'2017-07-04'),
-(3,1,1, '2016-08-07'),
-(4,3,3, '2016-08-09');
+(2, 3, 3,'2017-07-04'),
+(3, 1, 1, '2016-08-07'),
+(4, 3, 3, '2016-08-09');
 
 INSERT INTO `study` (`request_number`, `description`, `date`, `doctor_id`, `serial_number`, `manufacturer`) VALUES
 (1, 'LDL cholesterol analysis', '2016-08-30', 2, 'a87S17UT6b', 'Medtronic'),
