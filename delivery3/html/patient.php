@@ -21,13 +21,14 @@
     // Get devices associated with a given patient
     if (isset($id)){
         // Query database in order to obtain currently worn devices
-        // TODO - Correct query
         $result = query(
-            "SELECT distinct serialnum, manufacturer, model
-            FROM device JOIN wears ON manufacturer = manuf AND serialnum = snum 
-            JOIN patient ON patient = number
+            "SELECT serialnum, manufacturer, model
+            FROM wears, device, patient
             WHERE patient.number = ?
-                AND  datediff(current_date(), cast(wears.end AS date)) <= 0", $id);
+                AND patient.number = wears.patient
+                AND manufacturer = manuf
+                AND serialnum = snum
+                AND datediff(current_date(), cast(wears.end AS date)) <= 0", $id);
         if ($result){
             $cur_dev_table = createTable($result,
                 [["Serial number", "serialnum"],
@@ -38,13 +39,14 @@
         }
         
         // Query database in order to obtain previously worn devices
-        // TODO - Correct query
         $result = query(
-            "SELECT distinct serialnum, manufacturer, model
-            FROM device JOIN wears ON manufacturer = manuf AND serialnum = snum 
-            JOIN patient ON patient = number
+            "SELECT serialnum, manufacturer, model
+            FROM wears, device, patient
             WHERE patient.number = ?
-                AND  datediff(current_date(), cast(wears.end AS date)) > 0", $id);
+                AND patient.number = wears.patient
+                AND manufacturer = manuf
+                AND serialnum = snum
+                AND datediff(current_date(), cast(wears.end AS date)) > 0", $id);
         if ($result){
             $old_dev_table = createTable($result,
                 [["Serial number", "serialnum"],
