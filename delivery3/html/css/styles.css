@@ -1,0 +1,45 @@
+/**
+ * @file        styles.css
+ 
+ * @brief       CSS Stylesheet
+ *
+ * @author      João Borrego
+ *              Daniel Sousa
+ *              Nuno Ferreira 
+ */
+
+/* Wrapper div with header, content, footer structure */
+.wrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+/* Header div */
+#top {
+    max-height: 100px;
+    padding-top: 20px;
+}
+
+/* Main content middle div */
+#middle {
+    flex: 1;
+    padding-top: 20px;
+}
+
+/* Footer div */
+#bottom {
+    height: 30px;
+    padding-bottom: 20px;
+}
+
+/* Tables */
+table th {
+    text-align: center; 
+}
+
+.table {
+    margin: 0 auto;
+    width: 50% !important;
+}

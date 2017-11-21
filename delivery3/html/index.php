@@ -1,12 +1,17 @@
 <?php
-
-    // configuration
+    
+    /**
+     * @file        index.php
+     *
+     * @brief       Homepage and patient search by name
+     *
+     * @author      João Borrego
+     *              Daniel Sousa
+     *              Nuno Ferreira 
+     */
+    
+    // Configuration
     require("../includes/config.php"); 
-
-    require("../templates/header.php");
-
-    // Patient name
-    $name_err = $name = "";
 
     // Handle POST data
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -16,43 +21,40 @@
             $name = $_POST["name"];
         }
     }
-
     $valid = !empty($name) && empty($name_err);
 
-    if (!$name_err){
+    // Render header
+    $title = "Home";
+    require("../templates/header.php");
+    
+    if ($valid)
+    {
         // Append % to the search string in order to perform partial match in SQL query
         $name_arg = $name . "%";
-
         // Search for a patient by name and create HTML table
         $result = query("SELECT * FROM patient WHERE name LIKE ?", $name_arg);
-        $table = createTable($result, ["name", "birthday", "address"]);
+        $table = createPatientTable($result, ["name", "birthday", "address"]);
     }
 ?>
- 
-    <div class="container">
 
-        <form action="" method="post">
-            <fieldset>
-                <div class="control-group">
-                    <input autofocus name="name" placeholder="Patient name" type="text"/>
-                    <span class="error"><?php echo $name_err;?></span>
-                    <button type="submit" class="btn">Search</button>
-                </div>
-            </fieldset>
-        </form>
+        <div class="container">
 
-        <?php
-            if ($valid){
-                if (!$result) {
-                    echo 'No matches found. <a href="register.php">Register</a> a new patient?';
-                } else {
-                    echo $table;
+            <?php
+
+                require('../templates/patient_search_form.php');
+
+                if ($valid){
+                    if (!$result) {
+                        echo 'No matches found. <a href="register.php?name='. $name . '">Register</a> a new patient?';
+                    } else {
+                        echo $table;
+                    }
                 }
-            }
-        ?>
+            ?>
 
-    </div>
+        </div>
 
 <?php
+    // Render footer
     require("../templates/footer.php");
 ?>

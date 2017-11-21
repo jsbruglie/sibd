@@ -1,16 +1,18 @@
 <?php
 
     /**
-     * @file    functions.php
+     * @file        functions.php
      *
-     * @brief   Basic functions
+     * @brief       Basic functions
      * 
-     * @author  João Borrego
-     *          Daniel Sousa
-     *          Nuno Ferreira
+     * @author      João Borrego
+     *              Daniel Sousa
+     *              Nuno Ferreira
      */
 
     require_once("constants.php");
+
+    // TODO - Prepare statements
 
     /**
      * Executes SQL statement, possibly with parameters, returning
@@ -67,32 +69,39 @@
         }
     }
 
-    /**
-     * Renders template, passing in values.
-     */
-    function render($template, $values = [])
+    // TODO - Unify with create table
+    function createPatientTable($table, $column_names)
     {
-        // if template exists, render it
-        if (file_exists("../templates/$template"))
+        $table_html = '<table class="table">' . "\n";
+        // table head
+        $table_html .= "<thead>\n<tr>\n";        
+        foreach ($column_names as $col)
         {
-            // extract variables into local scope
-            extract($values);
-
-            // render header
-            require("../templates/header.php");
-
-            // render template
-            require("../templates/$template");
-
-            // render footer
-            require("../templates/footer.php");
+            $table_html .= '<th class="text-center">' . $col . "</th>\n";
         }
-
-        // else err
-        else
+        $table_html .= "</tr>\n</thead>\n";
+        
+        // table body
+        $table_html .= "<tbody>\n";
+        foreach ($table as $row)
         {
-            trigger_error("Invalid template: $template", E_USER_ERROR);
+            $table_html .= "<tr>\n";
+            foreach ($column_names as  $key=>$col)
+            {
+                if ($column_names[$key] === "name"){
+                    $entry = '<a href="patient.php?id=' . $row["number"]. '">' . $row[$col] . "</a>";
+                } else {
+                     $entry = $row[$col];
+                }
+                $table_html .= '<td class="text-center">' . $entry . "</td>\n";
+            }
+            $table_html .= "</tr>\n";
         }
+        $table_html .= "</tbody>\n";
+
+        $table_html .= "</table>\n";
+
+        return $table_html;
     }
 
     function createTable($table, $column_names)

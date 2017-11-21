@@ -1,13 +1,13 @@
 <?php
 
     /**
-     * @file    config.php
+     * @file        config.php
      *
-     * @brief   Basic configuration
+     * @brief       Basic configuration
      * 
-     * @author  João Borrego
-     *          Daniel Sousa
-     *          Nuno Ferreira
+     * @author      João Borrego
+     *              Daniel Sousa
+     *              Nuno Ferreira
      */
 
     // display errors, warnings, and notices
