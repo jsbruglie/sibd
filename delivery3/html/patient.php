@@ -30,7 +30,11 @@
                 AND  datediff(current_date(), cast(wears.end AS date)) <= 0", $id);
         if ($result){
             $cur_dev_table = createTable($result,
-                [["Serial number", "serialnum"], ["Manufacturer","manufacturer"], ["Product model","model"]]);
+                [["Serial number", "serialnum"],
+                 ["Manufacturer","manufacturer"],
+                 ["Product model","model"],
+                 ["Swap","swap",'<a href="swap_devices.php?sn=$serialnum+m=$manufacturer">↔</a>']]
+            );
         }
         
         // Query database in order to obtain previously worn devices
@@ -43,7 +47,10 @@
                 AND  datediff(current_date(), cast(wears.end AS date)) > 0", $id);
         if ($result){
             $old_dev_table = createTable($result,
-                [["Serial number", "serialnum"], ["Manufacturer","manufacturer"], ["Product model","model"]]);
+                [["Serial number", "serialnum"],
+                 ["Manufacturer","manufacturer"],
+                 ["Product model","model"]]
+            );
         }
     }
 

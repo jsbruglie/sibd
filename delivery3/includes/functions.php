@@ -69,41 +69,6 @@
         }
     }
 
-    // TODO - Unify with create table
-    function createPatientTable($table, $column_names)
-    {
-        $table_html = '<table class="table">' . "\n";
-        // table head
-        $table_html .= "<thead>\n<tr>\n";        
-        foreach ($column_names as $col)
-        {
-            $table_html .= '<th>' . $col . "</th>\n";
-        }
-        $table_html .= "</tr>\n</thead>\n";
-        
-        // table body
-        $table_html .= "<tbody>\n";
-        foreach ($table as $row)
-        {
-            $table_html .= "<tr>\n";
-            foreach ($column_names as  $key=>$col)
-            {
-                if ($column_names[$key] === "name"){
-                    $entry = '<a href="patient.php?id=' . $row["number"]. '">' . $row[$col] . "</a>";
-                } else {
-                     $entry = $row[$col];
-                }
-                $table_html .= '<td class="col-md-3">' . $entry . "</td>\n";
-            }
-            $table_html .= "</tr>\n";
-        }
-        $table_html .= "</tbody>\n";
-
-        $table_html .= "</table>\n";
-
-        return $table_html;
-    }
-
     function createTable($table, $column_names)
     {
 
@@ -121,9 +86,20 @@
         foreach ($table as $row)
         {
             $table_html .= "<tr>\n";
-            foreach ($column_names as $col)
+            foreach ($column_names as $key => $col)
             {
-                $table_html .= '<td class="col-md-3">' . $row[$col[1]] . "</td>\n";
+                // Replace content of special columns
+                if (count($col) == 3){
+                    // Replace variable instances in regex by variable values
+                    $exp = $col[2];
+                    foreach($row as $key => $aux){
+                        $exp = str_replace("$". $key, $row[$key], $exp);
+                    }
+                    $entry = $exp;
+                } else {
+                    $entry = $row[$col[1]];
+                }
+                $table_html .= '<td class="col-md-3">' . $entry . "</td>\n";
             }
             $table_html .= "</tr>\n";
         }
