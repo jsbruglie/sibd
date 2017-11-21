@@ -37,7 +37,7 @@
     }
 ?>
 
-        <div class="container">
+        <div class="container-fluid">
 
             <?php
 
@@ -47,7 +47,7 @@
                     if (!$result) {
                         echo 'No matches found. <a href="register.php?name='. $name . '">Register</a> a new patient?';
                     } else {
-                        echo $table;
+                        echo '<div>' . $table . '</div>';
                     }
                 }
             ?>

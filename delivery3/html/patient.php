@@ -14,12 +14,11 @@
     require("../includes/config.php"); 
 
     // Handle GET data
-    if (empty($_GET["id"])) {
-        // TODO
-    } else {
+    if (!empty($_GET["id"])) {
         $id = $_GET["id"];
     }
 
+    // Get devices associated with a given patient
     if (isset($id)){
         // Query database in order to obtain currently worn devices
         // TODO - Correct query
@@ -30,9 +29,11 @@
             WHERE patient.number = ?
                 AND  datediff(current_date(), cast(wears.end AS date)) <= 0", $id);
         if ($result){
-            $cur_dev_table = createTable($result, ["serialnum", "manufacturer", "model"]);
+            $cur_dev_table = createTable($result,
+                [["Serial number", "serialnum"], ["Manufacturer","manufacturer"], ["Product model","model"]]);
         }
-        // Query database in order to obtain currently worn devices
+        
+        // Query database in order to obtain previously worn devices
         // TODO - Correct query
         $result = query(
             "SELECT distinct serialnum, manufacturer, model
@@ -41,7 +42,8 @@
             WHERE patient.number = ?
                 AND  datediff(current_date(), cast(wears.end AS date)) > 0", $id);
         if ($result){
-            $old_dev_table = createTable($result, ["serialnum", "manufacturer", "model"]);
+            $old_dev_table = createTable($result,
+                [["Serial number", "serialnum"], ["Manufacturer","manufacturer"], ["Product model","model"]]);
         }
     }
 
@@ -49,8 +51,8 @@
     $title = 'Patient';
     require("../templates/header.php");
 ?>
- 
-        <div class="container">
+
+        <div class="container-fluid">
 
             <?php if (isset($cur_dev_table)): ?>
             <h4>Current devices</h4>

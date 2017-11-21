@@ -77,7 +77,7 @@
         $table_html .= "<thead>\n<tr>\n";        
         foreach ($column_names as $col)
         {
-            $table_html .= '<th class="text-center">' . $col . "</th>\n";
+            $table_html .= '<th>' . $col . "</th>\n";
         }
         $table_html .= "</tr>\n</thead>\n";
         
@@ -93,7 +93,7 @@
                 } else {
                      $entry = $row[$col];
                 }
-                $table_html .= '<td class="text-center">' . $entry . "</td>\n";
+                $table_html .= '<td class="col-md-3">' . $entry . "</td>\n";
             }
             $table_html .= "</tr>\n";
         }
@@ -112,7 +112,7 @@
         $table_html .= "<thead>\n<tr>\n";        
         foreach ($column_names as $col)
         {
-            $table_html .= "<th>" . $col . "</th>\n";
+            $table_html .= "<th>" . $col[0] . "</th>\n";
         }
         $table_html .= "</tr>\n</thead>\n";
         
@@ -123,7 +123,7 @@
             $table_html .= "<tr>\n";
             foreach ($column_names as $col)
             {
-                $table_html .= "<td>" . $row[$col] . "</td>\n";
+                $table_html .= '<td class="col-md-3">' . $row[$col[1]] . "</td>\n";
             }
             $table_html .= "</tr>\n";
         }
