@@ -26,7 +26,9 @@
         $result = query(
             "SELECT distinct serialnum, manufacturer, model
             FROM device JOIN wears ON manufacturer = manuf AND serialnum = snum 
-            JOIN patient JOIN patient = number WHERE patient.number = ?", $id);
+            JOIN patient ON patient = number
+            WHERE patient.number = ?
+                AND  datediff(current_date(), cast(wears.end AS date)) <= 0", $id);
         if ($result){
             $cur_dev_table = createTable($result, ["serialnum", "manufacturer", "model"]);
         }
@@ -35,7 +37,9 @@
         $result = query(
             "SELECT distinct serialnum, manufacturer, model
             FROM device JOIN wears ON manufacturer = manuf AND serialnum = snum 
-            JOIN patient JOIN patient = number WHERE patient.number = ?", $id);
+            JOIN patient ON patient = number
+            WHERE patient.number = ?
+                AND  datediff(current_date(), cast(wears.end AS date)) > 0", $id);
         if ($result){
             $old_dev_table = createTable($result, ["serialnum", "manufacturer", "model"]);
         }
