@@ -2,7 +2,7 @@
     
     /**
      * @file        register.php
-     
+     *
      * @brief       Register patient
      *
      * @author      João Borrego
