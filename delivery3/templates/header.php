@@ -22,7 +22,7 @@
         <div class="container-fluid">
 
             <div id="top">
-                Database and Information Systems Course Project
+                <h2>Information Systems and Databases Course Project</h2>
             </div>
 
             <div id="middle">
