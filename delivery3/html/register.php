@@ -35,7 +35,7 @@
         if (empty($_POST["address"])) {
             $address_err = "Mandatory field!";
         } else {
-            $address = $_POST["name"];
+            $address = $_POST["address"];
         }
     }
     $valid = !empty($name) && empty($name_err) &&

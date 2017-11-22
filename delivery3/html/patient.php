@@ -43,7 +43,8 @@
 
         if ($result){
             $cur_dev_table = createTable($result,
-                [["Serial number", "serialnum"],
+                [["Start", "start"],
+                 ["Serial number", "serialnum"],
                  ["Manufacturer", "manufacturer"],
                  ["Product model", "model"],
                  ["Actions", "_", $replace_btn]]
@@ -52,7 +53,7 @@
         
         // Query database in order to obtain previously worn devices
         $result = query(
-            "SELECT serialnum, manufacturer, model
+            "SELECT serialnum, manufacturer, model, start, end
             FROM wears, device, patient
             WHERE patient.number = ?
                 AND patient.number = wears.patient
@@ -61,7 +62,9 @@
                 AND datediff(current_date(), cast(wears.end AS date)) > 0", $id);
         if ($result){
             $old_dev_table = createTable($result,
-                [["Serial number", "serialnum"],
+                [["Start", "start"],
+                 ["End", "end"],
+                 ["Serial number", "serialnum"],
                  ["Manufacturer", "manufacturer"],
                  ["Product model", "model"]]
             );
