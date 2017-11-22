@@ -33,11 +33,15 @@
         $name_arg = $name . "%";
         // Search for a patient by name and create HTML table
         $result = query("SELECT * FROM patient WHERE name LIKE ?", $name_arg);
-        $table = createPatientTable($result, ["name", "birthday", "address"]);
+        $table = createTable($result,
+            [["Name", "name", '<a href="patient.php?id=$number">$name</a>'],
+             ["Birthday", "birthday"],
+             ["Address", "address"]]
+        );
     }
 ?>
 
-        <div class="container">
+        <div class="container-fluid">
 
             <?php
 
@@ -47,7 +51,7 @@
                     if (!$result) {
                         echo 'No matches found. <a href="register.php?name='. $name . '">Register</a> a new patient?';
                     } else {
-                        echo $table;
+                        echo '<div>' . $table . '</div>';
                     }
                 }
             ?>

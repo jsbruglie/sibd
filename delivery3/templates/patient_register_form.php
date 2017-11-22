@@ -8,7 +8,7 @@
             ?>
         />
         <?php if (isset($name_err)): ?>
-        <span class="alert alert-danger" role="alert"><?php echo $name_err;?>
+        <span class="alert" role="alert"><?php echo $name_err;?>
         <?php endif ?></span>
     </div> 
     <div class="form-group">
@@ -16,7 +16,7 @@
         <input autofocus name="birthday" placeholder="Patient Birthday" type="date"
             <?php if (isset($_POST['birthday'])) echo 'value="' . $_POST['birthday'] . '"' ?> />
         <?php if (isset($birthday_err)): ?>
-        <span class="alert alert-danger" role="alert"><?php echo $birthday_err;?>
+        <span class="alert" role="alert"><?php echo $birthday_err;?>
         <?php endif ?></span>
     </div>
     <div class="form-group">
@@ -24,7 +24,7 @@
         <input autofocus name="address" placeholder="Patient Address" type="text"
             <?php if (isset($_POST['address'])) echo 'value="' . $_POST['address'] . '"' ?> />
         <?php if (isset($address_err)): ?>
-        <span class="alert alert-danger" role="alert"><?php echo $address_err;?>
+        <span class="alert" role="alert"><?php echo $address_err;?>
         <?php endif ?></span>
     </div>
 
