@@ -13,33 +13,34 @@
     // Configuration
     require("../includes/config.php"); 
 
-    // Handle GET data
-    if ($_SERVER["REQUEST_METHOD"] == "GET") {
-        if (!empty($_GET["sn"])){
-            $cur_sn = $_GET["sn"];
+    // Handle POST data
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (!empty($_POST["patient"])){
+            $patient = $_POST["patient"];
         }
-        if (!empty($_GET["m"])){
-            $cur_m = $_GET["m"];
+        if (!empty($_POST["start"])){
+            $start = $_POST["start"];
+        }
+        if (!empty($_POST["end"])){
+            $end = $_POST["end"];
+        }
+        if (!empty($_POST["serialnum"])){
+            $serialnum = $_POST["serialnum"];
+        }
+        if (!empty($_POST["manufacturer"])){
+            $manufacturer = $_POST["manufacturer"];
+        }
+        if (!empty($_POST["cur_serialnum"])){
+            $cur_serialnum = $_POST["cur_serialnum"];
+        }
+        if (!empty($_POST["cur_manufacturer"])){
+            $cur_manufacturer = $_POST["cur_manufacturer"];
         }
     }
 
-    // Handle POST data
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        if (!empty($_POST["cur_sn"])){
-            $cur_sn = $_POST["cur_sn"];
-        }
-        if (!empty($_POST["cur_m"])){
-            $cur_m = $_POST["cur_m"];
-        }
-        if (!empty($_POST["new_sn"])){
-            $new_sn = $_POST["new_sn"];
-        }
-        if (!empty($_POST["new_m"])){
-            $new_m = $_POST["new_m"];
-        }
-    }
-    // TODO
-    $valid = false;
+    $valid = !empty($patient) && !empty($start) && !empty($end)
+    	&& !empty($serialnum) && !empty($manufacturer);
+    	// && !empty($cur_serialnum) && !empty($cur_manufacturer);
 
     // Render header
     $title = "Swap device";
@@ -48,23 +49,32 @@
     if ($valid)
     {
         // TODO - Swap
+
+        // Update end time of the current device to current time
+
+        // Create new entry 
     }
     else
     {
-        // Query database for devices from the same manufacturer
+        // TODO - Make sure device is available
+        // Query database for devices from the same manufacturer        
         $result = query(
-            "SELECT DISTINCT serialnum, manufacturer, model
+            "SELECT serialnum, manufacturer, model
             FROM device
             WHERE serialnum != ?
-                AND manufacturer = ?", $cur_sn, $cur_m);
-        
+                AND manufacturer = ?", $cur_serialnum, $cur_manufacturer);
+
         // Swap invisible form
+        // The currently worn device is needed to generate the available devices table
         $swap_btn = 
             '<form action="" method="post">' .
-            '<input type="hidden" name="cur_sn" value="' . $cur_sn . '">' .
-            '<input type="hidden" name="cur_m" value="' . $cur_m . '">' .
-            '<input type="hidden" name="new_sn" value="$serialnum">' .
-            '<input type="hidden" name="new_m" value="$manufacturer">' .
+            '<input type="hidden" name="start" value="' . $start . '">' .
+            '<input type="hidden" name="end" value="' . $end . '">' .
+            '<input type="hidden" name="patient" value="' . $patient . '>' .
+            '<input type="hidden" name="serialnum" value="$serialnum">' .
+            '<input type="hidden" name="manufacturer" value="$manufacturer">' .
+            '<input type="hidden" name="cur_serialnum" value="' . $cur_serialnum . '">' .
+            '<input type="hidden" name="cur_manufacturer" value="' . $cur_manufacturer . '">' .
             '<button type="submit" class="btn btn-primary">Swap</button>' .
             '</form>';
 
@@ -72,7 +82,7 @@
             [["Serial number", "serialnum"],
              ["Manufacturer","manufacturer"],
              ["Product model","model"],
-             ["Swap","swap", $swap_btn]]
+             ["Actions","swap", $swap_btn]]
         );
     }
 
@@ -84,7 +94,6 @@
         <h4>Choose an available device</h4>
         <?php echo $dev_table ?>
         <?php endif ?>
-
 
         </div>
 

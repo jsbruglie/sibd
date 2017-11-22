@@ -52,6 +52,7 @@
                         echo 'No matches found. <a href="register.php?name='. $name . '">Register</a> a new patient?';
                     } else {
                         echo '<div>' . $table . '</div>';
+                        echo 'Still have not found who you are looking for? <a href="register.php?name='. $name . '">Register</a> a new patient.';
                     }
                 }
             ?>
