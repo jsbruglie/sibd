@@ -36,11 +36,7 @@
 
 /* Forms */
 form {
-    margin:20px;
-}
-
-form .btn {
-    margin:10px;
+    margin:0;
 }
 
 /* Tables */
@@ -50,5 +46,6 @@ table th {
 
 .table {
     margin: 0 auto;
+    margin-top: 25px;
     width: 90% !important;
 }

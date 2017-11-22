@@ -8,5 +8,7 @@
 </form>
 
 <?php if (isset($name_err)): ?>
-<span class="alert alert-warning"><?php echo $name_err;?>
-<?php endif ?></span>
+<div style="margin-top:25px">
+<span class="alert alert-warning"><?php echo $name_err;?></span>
+</div>
+<?php endif ?>

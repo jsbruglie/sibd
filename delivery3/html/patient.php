@@ -34,7 +34,7 @@
                 [["Serial number", "serialnum"],
                  ["Manufacturer","manufacturer"],
                  ["Product model","model"],
-                 ["Swap","swap",'<a href="swap_devices.php?sn=$serialnum+m=$manufacturer">↔</a>']]
+                 ["Replace","_",'<a href="swap.php?sn=$serialnum&m=$manufacturer">Replace this device</a>']]
             );
         }
         
@@ -54,14 +54,21 @@
                  ["Product model","model"]]
             );
         }
+        $no_entries = !isset($cur_dev_table) && !isset($old_dev_table);
     }
 
     // Render header
-    $title = 'Patient';
+    $title = 'Patient devices';
     require("../templates/header.php");
 ?>
 
         <div class="container-fluid">
+
+            <?php if (!isset($id)): ?>
+            <div class="alert alert-danger">
+                <strong>Error!</strong> No patient provided.
+            </div>
+            <?php endif ?>
 
             <?php if (isset($cur_dev_table)): ?>
             <h4>Current devices</h4>
@@ -71,6 +78,10 @@
             <?php if (isset($old_dev_table)): ?>
             <h4>Old devices</h4>
             <?php echo $old_dev_table ?>
+            <?php endif ?>
+
+            <?php if (isset($no_entries) && $no_entries): ?>
+            <p>No registered device entries for this patient.</p>
             <?php endif ?>
 
         </div>
