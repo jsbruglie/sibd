@@ -30,7 +30,7 @@
 
             <div id="top">
                 <div class="container-fluid">
-                    <h2><a href="index.php" style="text-decoration: none">Information Systems and Databases Course Project 17/18</a></h2>
+                    <h2><a href="index.php" style="text-decoration: none">SIBD Project 17/18</a></h2>
                 </div>
             </div>
 
