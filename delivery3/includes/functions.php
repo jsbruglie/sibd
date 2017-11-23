@@ -99,7 +99,7 @@
                 } else {
                     $entry = $row[$col[1]];
                 }
-                $table_html .= '<td class="col-md-1">' . $entry . "</td>\n";
+                $table_html .= '<td class="col-sm-2">' . $entry . "</td>\n";
             }
             $table_html .= "</tr>\n";
         }

@@ -30,35 +30,36 @@
                 AND patient.number = ?
                 AND datediff(current_date(), cast(wears.end AS date)) <= 0", $id);
         
-        // Replace invisible form
-        $replace_btn = 
-            '<form action="swap.php" method="post">' .
-            '<input type="hidden" name="start" value="$start">' .
-            '<input type="hidden" name="end" value="$end">' .
-            '<input type="hidden" name="patient" value="$patient">' .
-            '<input type="hidden" name="cur_serialnum" value="$serialnum">' .
-            '<input type="hidden" name="cur_manufacturer" value="$manufacturer">' .
-            '<button type="submit" class="btn btn-block btn-primary btn-space">Replace</button>' .
-            '</form>';
-
-        // Replace invisible form
-        $study_btn = 
-            '<form action="study.php" method="post">' .
-            '<input type="hidden" name="serialnum" value="$serialnum">' .
-            '<input type="hidden" name="manufacturer" value="$manufacturer">' .
-            '<button type="submit" class="btn btn-block btn-primary">Add Study</button>' .
-            '</form>';
-
-        // Actions column
-        $action = '<div class="row"><div class="col">' . $replace_btn . '</div><div class="col">' . $study_btn . '</div></div>';
-
         if ($result){
+
+            // Replace invisible form button
+            $replace_btn = 
+                '<form action="swap.php" method="post">' .
+                '<input type="hidden" name="start" value="$start">' .
+                '<input type="hidden" name="end" value="$end">' .
+                '<input type="hidden" name="patient" value="$patient">' .
+                '<input type="hidden" name="cur_serialnum" value="$serialnum">' .
+                '<input type="hidden" name="cur_manufacturer" value="$manufacturer">' .
+                '<button type="submit" class="btn btn-block btn-primary btn-space">Replace</button>' .
+                '</form>';
+
+            // Study invisible form button
+            $study_btn = 
+                '<form action="study.php" method="post">' .
+                '<input type="hidden" name="serialnum" value="$serialnum">' .
+                '<input type="hidden" name="manufacturer" value="$manufacturer">' .
+                '<button type="submit" class="btn btn-block btn-primary">Add Study</button>' .
+                '</form>';
+
+            // Actions column
+            $device_action = '<div class="row"><div class="col">' . $replace_btn . '</div><div class="col">' . $study_btn . '</div></div>';
+
             $cur_dev_table = createTable($result,
                 [["Start", "start"],
                  ["Serial number", "serialnum"],
                  ["Manufacturer", "manufacturer"],
                  ["Product model", "model"],
-                 ["Actions", "_", $action]]
+                 ["Actions", "_", $device_action]]
             );
         }
         
@@ -81,6 +82,31 @@
             );
         }
         $no_entries = !isset($cur_dev_table) && !isset($old_dev_table);
+    
+        // Query database in order to obtain existing studies
+        $result = query(
+            "SELECT date, description, study.doctor_id, serial_number, manufacturer
+            FROM study, request
+            WHERE request.patient_id = ?
+                AND request.number = study.request_number", $id);
+        if ($result){
+            
+            // Add region invisible form button
+            $region_btn = 
+                '<form action="" method="post">' .
+                '<button type="submit" class="btn btn-block btn-primary btn-space">Add region</button>' .
+                '</form>';
+
+            $studies_table = createTable($result,
+                [["Date", "date"],
+                 ["Description", "description"],
+                 ["Doctor ID", "doctor_id"],
+                 ["Serial Number","serial_number"],
+                 ["Manufacturer","manufacturer"],
+                 ["Action","_", $region_btn]]
+            );
+        }
+
     }
 
     // Render header
@@ -99,15 +125,21 @@
             <?php if (isset($cur_dev_table)): ?>
             <h4>Current device</h4>
             <?php echo $cur_dev_table ?>
-            <?php endif ?>
 
-            <?php if (isset($old_dev_table)): ?>
+            <?php elseif (isset($old_dev_table)): ?>
             <h4>Old devices</h4>
             <?php echo $old_dev_table ?>
+
+            <?php else: ?>
+            <p>No registered device entries for this patient.</p>
             <?php endif ?>
 
-            <?php if (isset($no_entries) && $no_entries): ?>
-            <p>No registered device entries for this patient.</p>
+            <?php if (isset($studies_table)): ?>
+            <h4>Studies</h4>
+            <?php echo $studies_table ?>
+            
+            <?php else: ?>
+            <p>No registered study entries for this patient.</p>
             <?php endif ?>
 
         </div>
