@@ -93,7 +93,7 @@
             
             // Add region invisible form button
             $region_btn = 
-                '<form action="" method="post">' .
+                '<form action="region.php" method="post">' .
                 '<button type="submit" class="btn btn-block btn-primary btn-space">Add region</button>' .
                 '</form>';
 
