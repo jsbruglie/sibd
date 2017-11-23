@@ -38,8 +38,19 @@
             '<input type="hidden" name="patient" value="$patient">' .
             '<input type="hidden" name="cur_serialnum" value="$serialnum">' .
             '<input type="hidden" name="cur_manufacturer" value="$manufacturer">' .
-            '<button type="submit" class="btn btn-primary">Replace</button>' .
+            '<button type="submit" class="btn btn-block btn-primary btn-space">Replace</button>' .
             '</form>';
+
+        // Replace invisible form
+        $study_btn = 
+            '<form action="study.php" method="post">' .
+            '<input type="hidden" name="serialnum" value="$serialnum">' .
+            '<input type="hidden" name="manufacturer" value="$manufacturer">' .
+            '<button type="submit" class="btn btn-block btn-primary">Add Study</button>' .
+            '</form>';
+
+        // Actions column
+        $action = '<div class="row"><div class="col">' . $replace_btn . '</div><div class="col">' . $study_btn . '</div></div>';
 
         if ($result){
             $cur_dev_table = createTable($result,
@@ -47,7 +58,7 @@
                  ["Serial number", "serialnum"],
                  ["Manufacturer", "manufacturer"],
                  ["Product model", "model"],
-                 ["Actions", "_", $replace_btn]]
+                 ["Actions", "_", $action]]
             );
         }
         

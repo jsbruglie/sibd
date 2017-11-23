@@ -23,17 +23,17 @@
     // Handle POST data
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (empty($_POST["name"])) {
-            $name_err = "Mandatory field!";
+            $name_err = "Please insert the patient's name!";
         } else {
             $name = $_POST["name"];
         }
         if (empty($_POST["birthday"])) {
-            $birthday_err = "Mandatory field!";
+            $birthday_err = "Please insert the patient's birthday!";
         } else {
             $birthday = $_POST["birthday"];
         }
         if (empty($_POST["address"])) {
-            $address_err = "Mandatory field!";
+            $address_err = "Please insert the patient's address!";
         } else {
             $address = $_POST["address"];
         }

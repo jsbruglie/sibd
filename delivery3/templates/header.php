@@ -29,7 +29,9 @@
         <div class="wrapper">
 
             <div id="top">
-                <h2><a href="index.php" style="text-decoration: none">Information Systems and Databases Course Project 17/18</a></h2>
+                <div class="container-fluid">
+                    <h2><a href="index.php" style="text-decoration: none">Information Systems and Databases Course Project 17/18</a></h2>
+                </div>
             </div>
 
             <div id="middle">

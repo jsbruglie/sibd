@@ -1,7 +1,7 @@
 <form action="" method="post">
     <h2>New patient</h2>
     <div class="form-group required row">
-        <div class="col-sm-8">
+        <div class="col">
             <label class="col-form-label" for="name">Name</label>
             <input class="form-control" autofocus name="name" placeholder= "Patient name" type="text"
                 <?php 
@@ -13,7 +13,7 @@
             <span class="alert text-danger" role="alert"><?php echo $name_err;?>
             <?php endif ?></span>
         </div>
-        <div class="col-sm-4">
+        <div class="col">
             <label class="col-form-label" for="birthday">Birthday</label>
             <input class="form-control" name="birthday" placeholder="Patient Birthday" type="date"
                 <?php if (isset($_POST['birthday'])) echo 'value="' . $_POST['birthday'] . '"' ?> />
