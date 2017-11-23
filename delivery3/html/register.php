@@ -59,7 +59,7 @@
         <div class="container">
 
             <?php if (!isset($result)):
-                require('../templates/patient_register_form.php');
+            require('../templates/patient_register_form.php');
             ?>
             <?php elseif ($result === false): ?>
             <div class="alert alert-danger">

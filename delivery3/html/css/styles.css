@@ -37,6 +37,12 @@
 /* Forms */
 form {
     margin:0;
+    text-align: left;
+}
+
+.form-group.required .col-form-label:after {
+  content:"*";
+  color:red;
 }
 
 /* Tables */
