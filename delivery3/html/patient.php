@@ -126,12 +126,13 @@
             <?php if (isset($cur_dev_table)): ?>
             <h4>Current device</h4>
             <?php echo $cur_dev_table ?>
+            <?php endif ?>
 
-            <?php elseif (isset($old_dev_table)): ?>
+            <?php if (isset($old_dev_table)): ?>
             <h4>Old devices</h4>
             <?php echo $old_dev_table ?>
 
-            <?php else: ?>
+            <?php elseif (!isset($cur_dev_table)): ?>
             <p>No registered device entries for this patient.</p>
             <?php endif ?>
 
