@@ -52,7 +52,7 @@
         
         // TODO - Make this a transaction
         // Close current period
-        $result = query(
+        $result = tryQuery(
             "UPDATE period 
             NATURAL JOIN wears 
             SET end = ?
@@ -60,14 +60,14 @@
                 AND manuf = ?", $date, $cur_serialnum, $cur_manufacturer);
         
         // Insert a new time period with undefined end
-        $result = query(
+        $result = tryQuery(
             'INSERT INTO period (start,end) VALUES
             (?, "2999-12-31 00:00:00")', $date);
 
         // Insert new wears entry
-        $result = query(
+        $result = tryQuery(
             'INSERT INTO wears (start, end, snum, manuf, patient) VALUES
-            (?, "2999-12-31 00:00:00", ?,?,?)', $date, $serialnum, $manufacturer, $patient);
+            (?, "2999-12-31 00:00:00", ?, ?, ?)', $date, $serialnum, $manufacturer, $patient);
       
         $swap_result = $result;
     }
