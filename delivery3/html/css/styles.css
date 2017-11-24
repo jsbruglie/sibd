@@ -46,7 +46,6 @@ form {
 }
 
 /* Buttons */
-
 .btn-space {
     margin-right: 5px;
 }
@@ -59,5 +58,6 @@ table th {
 .table {
     margin: 0 auto;
     margin-top: 25px;
+    margin-bottom: 25px;
     width: 90% !important;
 }

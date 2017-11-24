@@ -39,17 +39,12 @@
             $y2 = $_POST["y2"];
         }
 
-        if (!empty($_POST["series_id"])){
-            $series_id = $_POST["series_id"];
-        } else {
-            // TODO - Error;
-        }
-
         if (!empty($_POST["visited"]) && (!isset($x1) || !isset($x2) || !isset($y1) || !isset($y2))){
             $xy_err = "Please insert the region coordinates!";
         }
     }
-    $valid = false;
+    $valid = !empty($series_id) && !empty($elem_index) && 
+        !empty($x1) && !empty($x2) && !empty($y1) && !empty($y2);
 
     // Render header
     $title = "Create region";
@@ -57,23 +52,40 @@
 
     if ($valid)
     {
-        // Add study to DB (request number is set to AI)
+        // TODO - Check if query is correct
         $result = query(
             "INSERT INTO region (series_id, elem_index, x1, y1, x2, y2) VALUES
             (?, ?, ?, ?, ?, ?)", $series_id, $elem_index, $x1, $y1, $x2, $y2);
-    }
-    else
-    {
 
+        // TODO - Detect overlap
+        $overlap = false;
     }
 
 ?>
 
         <div class="container">
             
-            <?php if (!isset($result))
+            <?php if (!$valid):
             require('../templates/add_region_form.php');
             ?>
+
+            <?php elseif ($result === false): ?>
+            <div class="alert alert-danger">
+                <strong>Error!</strong> Could not insert region in database.
+            </div>
+            
+            <?php else: ?>
+            <div class="alert alert-success">
+                <strong>Success!</strong> Inserted region in database.
+                <?php if ($overlap): ?>
+                No overlap with previously acquired regions detected: new clinical evidence.
+                <?php else: ?>
+                Overlap with previously acquired regions detected.
+                <?php endif ?>
+            </div>
+            <?php endif ?>
+
+            <a class="btn btn-link" href="index.php">Go Back</a>
 
         </div>
 

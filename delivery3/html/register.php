@@ -61,18 +61,19 @@
             <?php if (!isset($result)):
             require('../templates/patient_register_form.php');
             ?>
+            
             <?php elseif ($result === false): ?>
             <div class="alert alert-danger">
                 <strong>Error!</strong> Could not insert patient in database.
-                <?php echo count($result) ?>
             </div>
+            
             <?php else: ?>
             <div class="alert alert-success">
                 <strong>Success!</strong> Inserted <?= $name ?> in database.
             </div>
             <?php endif ?>
 
-            <button class="btn btn-link" onclick="goBack()">Go Back</button>
+            <a class="btn btn-link" href="index.php">Go Back</a>
 
         </div>
 

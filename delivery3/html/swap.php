@@ -52,11 +52,15 @@
 
         // Update end time of the current device to current time
 
-        // Create new entry 
+        // Create new time period
+
+        // Create new entry in wears table
+        
+        $swap_result = false;
     }
     else
     {
-        // TODO - Make sure device is available
+        // TODO - Make sure device is available? POST data may not be accurate
         // Query database for devices from the same manufacturer        
         $result = query(
             "SELECT serialnum, manufacturer, model
@@ -67,15 +71,15 @@
         // Swap invisible form
         // The currently worn device is needed to generate the available devices table
         $swap_btn = 
-            '<form action="" method="post">' .
+            '<form action="swap.php" method="post">' .
             '<input type="hidden" name="start" value="' . $start . '">' .
             '<input type="hidden" name="end" value="' . $end . '">' .
-            '<input type="hidden" name="patient" value="' . $patient . '>' .
+            '<input type="hidden" name="patient" value="' . $patient . '">' .
             '<input type="hidden" name="serialnum" value="$serialnum">' .
             '<input type="hidden" name="manufacturer" value="$manufacturer">' .
             '<input type="hidden" name="cur_serialnum" value="' . $cur_serialnum . '">' .
             '<input type="hidden" name="cur_manufacturer" value="' . $cur_manufacturer . '">' .
-            '<button type="submit" class="btn btn btn-block btn-primary">Swap</button>' .
+            '<button type="submit" class="btn btn-block btn-primary">Swap</button>' .
             '</form>';
 
         $dev_table = createTable($result,
@@ -90,10 +94,22 @@
 
         <div class="container">
 
-        <?php if (isset($dev_table)): ?>
-        <h4>Choose an available device</h4>
-        <?php echo $dev_table ?>
-        <?php endif ?>
+            <?php if (isset($dev_table)): ?>
+            <h4>Choose an available device</h4>
+            <?php echo $dev_table ?>
+            
+            <?php elseif ($swap_result === false): ?>
+            <div class="alert alert-danger">
+                <strong>Error!</strong> Could not replace device.
+            </div>
+            
+            <?php else: ?>
+            <div class="alert alert-success">
+                <strong>Success!</strong> Replaced device.
+            </div>
+            <?php endif ?>
+
+
 
         </div>
 

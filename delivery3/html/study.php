@@ -49,7 +49,10 @@
             $manufacturer = $_POST["manufacturer"];
         }
     }
-    $valid = false;
+    $valid = !empty($date) && !empty($description) && !empty($doctor_id) &&
+        !empty($series_name) && !empty($series_description);
+
+    $error = empty($serialnum) || empty($manufacturer);
 
     // Render header
     $title = "Create study";
@@ -57,23 +60,41 @@
 
     if ($valid)
     {
-        // Add study to DB (request number is set to AI)
-        $result = query(
-            "INSERT INTO study (request_number, description, date, doctor_id, serial_number, manufacturer) VALUES
-            (NULL, ?, ?, ?, ?, ?)", $description, $date, $doctor, $serialnum, $manufacturer); 
-    }
-    else
-    {
+        // TODO
+        
+        // Transaction begin
+        // Try inserting study
+        // Try inserting series
+        // Error? Rollback : Commit
 
+        $result = false;
     }
 
 ?>
 
         <div class="container">
             
-            <?php if (!isset($result))
+            <?php if ($error): ?>
+            <div class="alert alert-danger">
+                <strong>Error!</strong> No device provided.
+            </div>
+
+            <?php elseif (!$valid):
             require('../templates/add_study_form.php');
             ?>
+
+            <?php elseif ($result === false): ?>
+            <div class="alert alert-danger">
+                <strong>Error!</strong> Could not insert study and associated data series in database.
+            </div>
+            
+            <?php else: ?>
+            <div class="alert alert-success">
+                <strong>Success!</strong> Inserted study and associated series in database.
+            </div>
+            <?php endif ?>
+
+            <a class="btn btn-link" href="index.php">Go Back</a>
 
         </div>
 

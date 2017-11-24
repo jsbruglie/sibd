@@ -69,7 +69,7 @@
     <div class="form-group required row">
         <div class="col-sm-4">
             <label class="col-form-label" for="series_name">Name</label>
-            <input class="form-control" autofocus series_name="date" placeholder= "Series" type="text"
+            <input class="form-control" name="series_name" placeholder= "Series" type="text"
                 <?php if (isset($_POST['series_name'])) echo 'value="' . $_POST['series_name'] . '"'; ?>
             />
             <?php if (isset($series_name_err)): ?>

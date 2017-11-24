@@ -19,9 +19,6 @@
         <!-- Custom style sheet -->
         <link href="css/styles.css" rel="stylesheet"/>
 
-        <!-- Javascript to go back one page -->
-        <script>function goBack() { window.history.back() }</script>
-
     </head>
 
     <body>
