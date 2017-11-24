@@ -71,6 +71,7 @@
 
     function createTable($table, $column_names)
     {
+        $num_cols = count($column_names);
 
         $table_html = '<table class="table">' . "\n";
         // table head
@@ -99,7 +100,7 @@
                 } else {
                     $entry = $row[$col[1]];
                 }
-                $table_html .= '<td class="col-sm-2">' . $entry . "</td>\n";
+                $table_html .= '<td class="col-sm-' . (int) (12 / $num_cols) . '">' . $entry . "</td>\n";
             }
             $table_html .= "</tr>\n";
         }
