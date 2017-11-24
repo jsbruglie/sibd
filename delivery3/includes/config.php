@@ -4,7 +4,7 @@
      * @file        config.php
      *
      * @brief       Basic configuration
-     * 
+     *
      * @author      João Borrego
      *              Daniel Sousa
      *              Nuno Ferreira

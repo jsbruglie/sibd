@@ -1,17 +1,17 @@
 <?php
-    
+
     /**
      * @file        patient.php
-     * 
+     *
      * @brief       Register patient
      *
      * @author      João Borrego
      *              Daniel Sousa
-     *              Nuno Ferreira 
+     *              Nuno Ferreira
      */
 
     // Configuration
-    require("../includes/config.php"); 
+    require("../includes/config.php");
 
     // Handle GET data
     if (!empty($_GET["id"])) {
@@ -29,11 +29,11 @@
                 AND serialnum = snum
                 AND patient.number = ?
                 AND timestampdiff(second,wears.end,current_timestamp) <= 0", $id);
-        
+
         if ($result){
 
             // Replace invisible form button
-            $replace_btn = 
+            $replace_btn =
                 '<form action="swap.php" method="post">' .
                 '<input type="hidden" name="start" value="$start">' .
                 '<input type="hidden" name="end" value="$end">' .
@@ -44,7 +44,7 @@
                 '</form>';
 
             // Study invisible form button
-            $study_btn = 
+            $study_btn =
                 '<form action="study.php" method="post">' .
                 '<input type="hidden" name="serialnum" value="$serialnum">' .
                 '<input type="hidden" name="manufacturer" value="$manufacturer">' .
@@ -62,7 +62,7 @@
                  ["Actions", "_", $device_action]]
             );
         }
-        
+
         // Query database in order to obtain previously worn devices
         $result = tryQuery(
             "SELECT serialnum, manufacturer, model, start, end
@@ -82,7 +82,7 @@
             );
         }
         $no_entries = !isset($cur_dev_table) && !isset($old_dev_table);
-    
+
         // Query database in order to obtain existing studies
         $result = tryQuery(
             "SELECT date, description, study.doctor_id, serial_number, manufacturer
@@ -90,9 +90,9 @@
             WHERE request.patient_id = ?
                 AND request.number = study.request_number", $id);
         if ($result){
-            
+
             // Add region invisible form button
-            $region_btn = 
+            $region_btn =
                 '<form action="region.php" method="post">' .
                 // TODO - add required POST parameters
                 '<button type="submit" class="btn btn-block btn-primary btn-space">Add region</button>' .
@@ -139,7 +139,7 @@
             <?php if (isset($studies_table)): ?>
             <h4>Studies</h4>
             <?php echo $studies_table ?>
-            
+
             <?php else: ?>
             <p>No registered study entries for this patient.</p>
             <?php endif ?>

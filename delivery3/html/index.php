@@ -1,5 +1,5 @@
 <?php
-    
+
     /**
      * @file        index.php
      *
@@ -7,11 +7,11 @@
      *
      * @author      João Borrego
      *              Daniel Sousa
-     *              Nuno Ferreira 
+     *              Nuno Ferreira
      */
-    
+
     // Configuration
-    require("../includes/config.php"); 
+    require("../includes/config.php");
 
     // Handle POST data
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -26,7 +26,7 @@
     // Render header
     $title = "Home";
     require("../templates/header.php");
-    
+
     $show_table = (!isset($name) || $valid);
     if ($show_table)
     {
@@ -35,7 +35,7 @@
         } else {
             $name_arg = $name . "%";
             $result = tryQuery("SELECT * FROM patient WHERE name LIKE ?", $name_arg);
-        } 
+        }
         $table = createTable($result,
             [["Name", "name", '<a href="patient.php?id=$number">$name</a>'],
              ["Birthday", "birthday"],

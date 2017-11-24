@@ -4,7 +4,7 @@
         <div class="col">
             <label class="col-form-label" for="name">Name</label>
             <input class="form-control" autofocus name="name" placeholder= "Patient name" type="text"
-                <?php 
+                <?php
                     if (isset($_POST['name'])) echo 'value="' . $_POST['name'] . '"';
                     else if (isset($name)) echo 'value="' . $name . '"';
                 ?>

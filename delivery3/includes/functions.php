@@ -4,7 +4,7 @@
      * @file        functions.php
      *
      * @brief       Basic functions
-     * 
+     *
      * @author      João Borrego
      *              Daniel Sousa
      *              Nuno Ferreira
@@ -31,7 +31,7 @@
                 $handle = new PDO("mysql:dbname=" . DATABASE . ";host=" . SERVER, USERNAME, PASSWORD);
 
                 // Ensure that PDO::prepare returns false when passed invalid SQL
-                $handle->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); 
+                $handle->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
                 // Ensure an exception is thrown whenever a query fails
                 $handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             }
@@ -114,14 +114,14 @@
     function transact($queries)
     {
         $handle = getDatabaseHandle();
-        
+
         $handle->beginTransaction();
         try
         {
             foreach ($queries as $request)
             {
                 $sql = $request[0];
-                $parameters = (count($request) == 1)? [] : $request[1]; 
+                $parameters = (count($request) == 1)? [] : $request[1];
                 $statement = $handle->prepare($sql);
                 $results = $statement->execute($parameters);
             }
@@ -129,10 +129,11 @@
         catch (PDOException $e)
         {
             $handle->rollBack();
-            return false;    
+            $error = $e->getMessage();
+            return array(false, $error);
         }
         $handle->commit();
-        return true;
+        return array(true, null);
     }
 
     /**
@@ -149,13 +150,13 @@
 
         $table_html = '<table class="table">' . "\n";
         // table head
-        $table_html .= "<thead>\n<tr>\n";        
+        $table_html .= "<thead>\n<tr>\n";
         foreach ($column_spec as $col)
         {
             $table_html .= "<th>" . $col[0] . "</th>\n";
         }
         $table_html .= "</tr>\n</thead>\n";
-        
+
         // table body
         $table_html .= "<tbody>\n";
         foreach ($table as $row)

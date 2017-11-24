@@ -1,5 +1,5 @@
 <?php
-    
+
     /**
      * @file        swap.php
      *
@@ -7,11 +7,11 @@
      *
      * @author      João Borrego
      *              Daniel Sousa
-     *              Nuno Ferreira 
+     *              Nuno Ferreira
      */
-    
+
     // Configuration
-    require("../includes/config.php"); 
+    require("../includes/config.php");
 
     // Handle POST data
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -44,21 +44,21 @@
     // Render header
     $title = "Swap device";
     require("../templates/header.php");
-    
+
     if ($valid)
     {
 
         $date = date("Y-m-d H:i:s", time());
-        
+
         // TODO - Make this a transaction
         // Close current period
         $result = tryQuery(
-            "UPDATE period 
-            NATURAL JOIN wears 
+            "UPDATE period
+            NATURAL JOIN wears
             SET end = ?
-            WHERE snum = ? 
+            WHERE snum = ?
                 AND manuf = ?", $date, $cur_serialnum, $cur_manufacturer);
-        
+
         // Insert a new time period with undefined end
         $result = tryQuery(
             'INSERT INTO period (start,end) VALUES
@@ -68,13 +68,13 @@
         $result = tryQuery(
             'INSERT INTO wears (start, end, snum, manuf, patient) VALUES
             (?, "2999-12-31 00:00:00", ?, ?, ?)', $date, $serialnum, $manufacturer, $patient);
-      
+
         $swap_result = $result;
     }
     else
     {
         // TODO - Make sure device is available? POST data may not be accurate
-        // Query database for devices from the same manufacturer        
+        // Query database for devices from the same manufacturer
         $result = tryQuery(
             "SELECT serialnum, manufacturer, model
             FROM device
@@ -83,7 +83,7 @@
 
         // Swap invisible form
         // The currently worn device is needed to generate the available devices table
-        $swap_btn = 
+        $swap_btn =
             '<form action="swap.php" method="post">' .
             '<input type="hidden" name="start" value="' . $start . '">' .
             '<input type="hidden" name="end" value="' . $end . '">' .
@@ -110,12 +110,12 @@
             <?php if (isset($dev_table)): ?>
             <h4>Choose an available device</h4>
             <?php echo $dev_table ?>
-            
+
             <?php elseif ($swap_result === false): ?>
             <div class="alert alert-danger">
                 <strong>Error!</strong> Could not replace device.
             </div>
-            
+
             <?php else: ?>
             <div class="alert alert-success">
                 <strong>Success!</strong> Replaced device.

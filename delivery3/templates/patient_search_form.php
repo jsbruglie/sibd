@@ -5,7 +5,7 @@
             <input class="form-control mr-sm-2" autofocus name="name" placeholder="Patient name" type="text"
                 <?php if (isset($_POST['name'])) echo 'value="' . $_POST['name'] . '"' ?> />
         </div>
-        <button type="submit" class="btn btn-primary">Search</button>    
+        <button type="submit" class="btn btn-primary">Search</button>
     </form>
 
     <?php if (isset($name_err)): ?>

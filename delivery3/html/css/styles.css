@@ -1,11 +1,11 @@
 /**
  * @file        styles.css
- 
+ *
  * @brief       CSS Stylesheet
  *
  * @author      João Borrego
  *              Daniel Sousa
- *              Nuno Ferreira 
+ *              Nuno Ferreira
  */
 
 /* Wrapper div with header, content, footer structure */
@@ -56,7 +56,7 @@ form {
 
 /* Tables */
 table th {
-    text-align: center; 
+    text-align: center;
 }
 
 .table {

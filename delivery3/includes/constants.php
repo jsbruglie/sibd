@@ -4,7 +4,7 @@
      * @file    constants.php
      *
      * @brief   Important constants, namely for database access
-     * 
+     *
      * @author  João Borrego
      *          Daniel Sousa
      *          Nuno Ferreira

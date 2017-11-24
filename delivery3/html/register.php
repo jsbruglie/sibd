@@ -1,5 +1,5 @@
 <?php
-    
+
     /**
      * @file        register.php
      *
@@ -7,11 +7,11 @@
      *
      * @author      João Borrego
      *              Daniel Sousa
-     *              Nuno Ferreira 
+     *              Nuno Ferreira
      */
-    
+
     // Configuration
-    require("../includes/config.php"); 
+    require("../includes/config.php");
 
     // Handle GET data
     if ($_SERVER["REQUEST_METHOD"] == "GET") {
@@ -45,7 +45,7 @@
     // Render header
     $title = "Register patient";
     require("../templates/header.php");
-    
+
     if ($valid)
     {
         // Add patient to DB (number is set to AI)
@@ -61,12 +61,12 @@
             <?php if (!isset($result)):
             require('../templates/patient_register_form.php');
             ?>
-            
+
             <?php elseif ($result === false): ?>
             <div class="alert alert-danger">
                 <strong>Error!</strong> Could not insert patient in database.
             </div>
-            
+
             <?php else: ?>
             <div class="alert alert-success">
                 <strong>Success!</strong> Inserted <?= $name ?> in database.

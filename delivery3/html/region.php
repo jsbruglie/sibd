@@ -1,5 +1,5 @@
 <?php
-    
+
     /**
      * @file        region.php
      *
@@ -7,11 +7,11 @@
      *
      * @author      João Borrego
      *              Daniel Sousa
-     *              Nuno Ferreira 
+     *              Nuno Ferreira
      */
-    
+
     // Configuration
-    require("../includes/config.php"); 
+    require("../includes/config.php");
 
     // Handle POST data
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -28,13 +28,13 @@
         }
         if (!empty($_POST["x1"])){
             $x1 = $_POST["x1"];
-        } 
+        }
         if (!empty($_POST["x2"])){
             $x2 = $_POST["x2"];
-        } 
+        }
         if (!empty($_POST["y1"])){
             $y1 = $_POST["y1"];
-        } 
+        }
         if (!empty($_POST["y2"])){
             $y2 = $_POST["y2"];
         }
@@ -43,7 +43,7 @@
             $xy_err = "Please insert the region coordinates!";
         }
     }
-    $valid = !empty($series_id) && !empty($elem_index) && 
+    $valid = !empty($series_id) && !empty($elem_index) &&
         !empty($x1) && !empty($x2) && !empty($y1) && !empty($y2);
 
     // Render header
@@ -64,7 +64,7 @@
 ?>
 
         <div class="container">
-            
+
             <?php if (!$valid):
             require('../templates/add_region_form.php');
             ?>
@@ -73,7 +73,7 @@
             <div class="alert alert-danger">
                 <strong>Error!</strong> Could not insert region in database.
             </div>
-            
+
             <?php else: ?>
             <div class="alert alert-success">
                 <strong>Success!</strong> Inserted region in database.

@@ -1,5 +1,5 @@
 <?php
-    
+
     /**
      * @file        study.php
      *
@@ -7,17 +7,17 @@
      *
      * @author      João Borrego
      *              Daniel Sousa
-     *              Nuno Ferreira 
+     *              Nuno Ferreira
      */
-    
+
     // Configuration
-    require("../includes/config.php"); 
+    require("../includes/config.php");
 
     // Handle POST data
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!empty($_POST["request_number"])){
             $request_number = $_POST["request_number"];
-        // Complain only if there has been an invalid submit attempt
+        // Complain only if there has been an incomplete submit attempt
         } else if (isset($_POST["visited"])){
             $request_number_err = "Please insert the request id!";
         }
@@ -59,7 +59,7 @@
             $manufacturer = $_POST["manufacturer"];
         }
     }
-    $valid = !empty($request_number) && !empty($date) && !empty($description) && !empty($doctor_id) &&
+    $filled = !empty($request_number) && !empty($date) && !empty($description) && !empty($doctor_id) &&
         !empty($series_id) && !empty($series_name) && !empty($series_description);
 
     $error = empty($serialnum) || empty($manufacturer);
@@ -68,42 +68,61 @@
     $title = "Create study";
     require("../templates/header.php");
 
-    if ($valid)
+    if ($filled)
     {
-        $insert_study = [
-            'INSERT INTO study (request_number, description, date, doctor_id, serial_number, manufacturer) VALUES
-                (?, ?, ?, ?, ?, ?),', [$request_number, $description, $date, $doctor_id, $serialnum, $manufacturer]
-        ];
+        // Ensure patient wearing device is the object of the provided study request
+        $valid = tryQuery(
+            "SELECT *
+            FROM patient, request, device
+            WHERE request.number = ?
+                AND wears.snum = ?
+                AND wears.manuf = ?
+                AND patient.number = request.patient_id
+                AND wears.patient = patient.number", $request_number, $serialnum, $manufacturer);
 
-        $base_url = $_SERVER['SERVER_NAME'] . dirname($_SERVER['REQUEST_URI']) . "/series/" . $series_id;
+        if ($valid !== false){
+            // SQL query to insert study
+            $insert_study = [
+                'INSERT INTO study (request_number, description, date, doctor_id, serial_number, manufacturer) VALUES
+                    (?, ?, ?, ?, ?, ?)', [$request_number, $description, $date, $doctor_id, $serialnum, $manufacturer]
+            ];
 
-        $insert_series = [
-            'INSERT INTO series (series_id, name, base_url, request_number, description) VALUES
-                (?, ?, ?, ?, ?, ?),', [$series_id, $series_name, $base_url, $request_number, $series_description]
-        ];
+            // SQL query to insert data series
+            $base_url = "http://" . $_SERVER['SERVER_NAME'] . dirname($_SERVER['REQUEST_URI']) . "/series/" . $series_id;
+            $insert_series = [
+                'INSERT INTO series (series_id, name, base_url, request_number, description) VALUES
+                    (?, ?, ?, ?, ?)', [$series_id, $series_name, $base_url, $request_number, $series_description]
+            ];
 
-        $result = transact([$insert_study, $insert_series]);
+            // Perform transaction
+            $result = transact([$insert_study, $insert_series]);
+            list($success, $sql_error) = $result;
+        }
     }
 
 ?>
 
         <div class="container">
-            
+
             <?php if ($error): ?>
             <div class="alert alert-danger">
                 <strong>Error!</strong> No device provided.
             </div>
 
-            <?php elseif (!$valid):
-            require('../templates/add_study_form.php');
-            ?>
+            <?php elseif (!$filled): require('../templates/add_study_form.php'); ?>
 
-            <?php elseif ($result === false): ?>
+            <?php elseif (!$valid): ?>
             <div class="alert alert-danger">
-                <strong>Error!</strong> Could not insert study and associated data series in database.
+                <strong>Error!</strong> The chosen request does not belong to the patient (wearer of device).
             </div>
-            
-            <?php else: ?>
+            <?php endif ?>
+
+            <?php if (isset($success) && $success == false): ?>
+            <div class="alert alert-danger">
+                <strong>Error!</strong> Could not insert study and associated data series in database:<p><?= $sql_error ?></p>
+            </div>
+
+            <?php elseif (isset($success)): ?>
             <div class="alert alert-success">
                 <strong>Success!</strong> Inserted study and associated series in database.
             </div>
