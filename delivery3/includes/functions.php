@@ -12,44 +12,59 @@
 
     require_once("constants.php");
 
-    // TODO - Prepare statements
-
     /**
-     * Executes SQL statement, possibly with parameters, returning
-     * an array of all rows in result set or false on (non-fatal) error.
+     * Returns a database handle
+     *
+     * If not set, creates the handle instance and connects to DB
+     *
+     * @return     PDO   The database handle.
      */
-    function query(/* $sql [, ... ] */)
+    function getDatabaseHandle()
     {
-        // SQL statement
-        $sql = func_get_arg(0);
-
-        // parameters, if any
-        $parameters = array_slice(func_get_args(), 1);
-        // try to connect to database
-        static $handle;
         if (!isset($handle))
         {
+            // If not declare static variable in order to have a single instance
+            static $handle;
             try
             {
-                // connect to database
+                // Connect to database
                 $handle = new PDO("mysql:dbname=" . DATABASE . ";host=" . SERVER, USERNAME, PASSWORD);
 
-                // ensure that PDO::prepare returns false when passed invalid SQL
+                // Ensure that PDO::prepare returns false when passed invalid SQL
                 $handle->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); 
+                // Ensure an exception is thrown whenever a query fails
+                $handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             }
             catch (Exception $e)
             {
-                // trigger (big, orange) error
+                // Trigger error
                 trigger_error($e->getMessage(), E_USER_ERROR);
                 exit;
             }
         }
+        return $handle;
+    }
+
+    /**
+     * Executes SQL statement, possibly with parameters
+     *
+     * @throws     PDOException on failure
+     *
+     * @param      string   $sql         The sql
+     * @param      array    $parameters  The parameters
+     *
+     * @return     An array of all rows in result set or false on (non-fatal) error.
+     */
+    function query($sql, $parameters)
+    {
+        // Get the database handle
+        $handle = getDatabaseHandle();
 
         // prepare SQL statement
         $statement = $handle->prepare($sql);
         if ($statement === false)
         {
-            // trigger (big, orange) error
+            // Trigger error
             trigger_error($handle->errorInfo()[2], E_USER_ERROR);
             exit;
         }
@@ -57,7 +72,7 @@
         // execute SQL statement
         $results = $statement->execute($parameters);
 
-        // return result set's rows, if any
+        // return result sets rows, if any
         if ($results !== false)
         {
             return $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -68,14 +83,74 @@
         }
     }
 
-    function createTable($table, $column_names)
+    /**
+     * Attempts performing a database query
+     *
+     * @return     boolean  Whether the query was successful or not
+     */
+    function tryQuery(/* $sql_query, $param1, $param2 ...*/)
     {
-        $num_cols = count($column_names);
+        // SQL statement
+        $sql = func_get_arg(0);
+        // Get parameters, if any
+        $parameters = array_slice(func_get_args(), 1);
+        try
+        {
+            return query($sql, $parameters);
+        }
+        catch (PDOException $e)
+        {
+            return false;
+        }
+    }
+
+    /**
+     * Performs a transaction for a given array of sql queries
+     *
+     * @param      array    $queries  The array of sql queries
+     *
+     * @return     boolean  Whether the transaction was successful
+     */
+    function transact($queries)
+    {
+        $handle = getDatabaseHandle();
+        
+        $handle->beginTransaction();
+        try
+        {
+            foreach ($queries as $request)
+            {
+                $sql = $request[0];
+                $parameters = (count($request) == 1)? [] : $request[1]; 
+                $statement = $handle->prepare($sql);
+                $results = $statement->execute($parameters);
+            }
+        }
+        catch (PDOException $e)
+        {
+            $handle->rollBack();
+            return false;    
+        }
+        $handle->commit();
+        return true;
+    }
+
+    /**
+     * Creates a table.
+     *
+     * @param      <type>  $table         The table
+     * @param      <type>  $column_spec   The array of column specifications
+     *
+     * @return     string  The HTML string of the desired table
+     */
+    function createTable($table, $column_spec)
+    {
+        $num_cols = count($column_spec);
 
         $table_html = '<table class="table">' . "\n";
         // table head
         $table_html .= "<thead>\n<tr>\n";        
-        foreach ($column_names as $col)
+        foreach ($column_spec as $col)
         {
             $table_html .= "<th>" . $col[0] . "</th>\n";
         }
@@ -86,7 +161,7 @@
         foreach ($table as $row)
         {
             $table_html .= "<tr>\n";
-            foreach ($column_names as $key => $col)
+            foreach ($column_spec as $key => $col)
             {
                 // Replace content of special columns
                 if (count($col) == 3){
@@ -104,7 +179,6 @@
             $table_html .= "</tr>\n";
         }
         $table_html .= "</tbody>\n";
-
         $table_html .= "</table>\n";
 
         return $table_html;
