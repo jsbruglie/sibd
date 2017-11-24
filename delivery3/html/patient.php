@@ -21,7 +21,7 @@
     // Get devices associated with a given patient
     if (isset($id)){
         // Query database in order to obtain currently worn devices
-        $result = query(
+        $result = tryQuery(
             "SELECT serialnum, manufacturer, model, start, end, patient
             FROM wears, device, patient
             WHERE patient.number = wears.patient
@@ -64,7 +64,7 @@
         }
         
         // Query database in order to obtain previously worn devices
-        $result = query(
+        $result = tryQuery(
             "SELECT serialnum, manufacturer, model, start, end
             FROM wears, device, patient
             WHERE patient.number = ?
@@ -84,7 +84,7 @@
         $no_entries = !isset($cur_dev_table) && !isset($old_dev_table);
     
         // Query database in order to obtain existing studies
-        $result = query(
+        $result = tryQuery(
             "SELECT date, description, study.doctor_id, serial_number, manufacturer
             FROM study, request
             WHERE request.patient_id = ?

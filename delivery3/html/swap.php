@@ -62,7 +62,7 @@
     {
         // TODO - Make sure device is available? POST data may not be accurate
         // Query database for devices from the same manufacturer        
-        $result = query(
+        $result = tryQuery(
             "SELECT serialnum, manufacturer, model
             FROM device
             WHERE serialnum != ?
