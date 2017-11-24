@@ -50,6 +50,10 @@ form {
     margin-right: 5px;
 }
 
+.btn-primary {
+    margin: 5px;
+}
+
 /* Tables */
 table th {
     text-align: center; 

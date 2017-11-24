@@ -40,7 +40,7 @@
                 '<input type="hidden" name="patient" value="$patient">' .
                 '<input type="hidden" name="cur_serialnum" value="$serialnum">' .
                 '<input type="hidden" name="cur_manufacturer" value="$manufacturer">' .
-                '<button type="submit" class="btn btn-md btn-block btn-primary btn-space">Replace</button>' .
+                '<button type="submit" class="btn btn-sm btn-block btn-primary btn-space">Replace</button>' .
                 '</form>';
 
             // Study invisible form button
@@ -48,7 +48,7 @@
                 '<form action="study.php" method="post">' .
                 '<input type="hidden" name="serialnum" value="$serialnum">' .
                 '<input type="hidden" name="manufacturer" value="$manufacturer">' .
-                '<button type="submit" class="btn btn-md btn-block btn-primary">Add Study</button>' .
+                '<button type="submit" class="btn btn-sm btn-block btn-primary">Add Study</button>' .
                 '</form>';
 
             // Actions column
