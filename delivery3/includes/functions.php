@@ -119,18 +119,21 @@
                 $parameters = (count($request) == 1)? [] : $request[1]; 
                 echo "<h5>" . $sql . "</h5>";
                 var_dump($parameters);
-                query($sql, $parameters);
+                $statement = $handle->prepare($sql);
+                $results = $statement->execute($parameters);
+                //$handle->exec($sql);
             }
-            $handle->commit();
-            echo "<h6>Success! Commiting...</h6>";
-            return true;
         }
-        catch (Exception $e)
+        catch (PDOException $e)
         {
-            $handle->rollBack();
             echo "<h6>Exception! Rolling back...</h6>";
+            $handle->rollBack();
             return false;    
         }
+
+        $handle->commit();
+        echo "<h6>Success! Commiting...</h6>";
+        return true;
     }
 
     function createTable($table, $column_names)
