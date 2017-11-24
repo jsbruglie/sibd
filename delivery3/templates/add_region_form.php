@@ -71,5 +71,12 @@
 
     <input type="hidden" name="visited" value="true">
 
+    <input type="hidden" name="patient_number"
+        <?php if (isset($_POST['patient_number'])) echo 'value="' . $_POST['patient_number'] . '"' ?>
+    />
+    <input type="hidden" name="request_number"
+        <?php if (isset($_POST['request_number'])) echo 'value="' . $_POST['request_number'] . '"' ?>
+    />
+
     <button type="submit" class="btn btn-primary">Add Region</button>
 </form>

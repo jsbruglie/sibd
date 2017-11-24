@@ -85,7 +85,7 @@
 
         // Query database in order to obtain existing studies
         $result = tryQuery(
-            "SELECT date, description, study.doctor_id, serial_number, manufacturer
+            "SELECT date, description, study.doctor_id, serial_number, manufacturer, request_number
             FROM study, request
             WHERE request.patient_id = ?
                 AND request.number = study.request_number", $id);
@@ -94,7 +94,8 @@
             // Add region invisible form button
             $region_btn =
                 '<form action="region.php" method="post">' .
-                // TODO - add required POST parameters
+                '<input type="hidden" name="patient_number" value="' . $id . '">' .
+                '<input type="hidden" name="request_number" value="$request_number">' .
                 '<button type="submit" class="btn btn-sm btn-block btn-primary btn-space">Add region</button>' .
                 '</form>';
 

@@ -51,6 +51,8 @@
         } else if (isset($_POST["visited"])){
             $series_description_err = "Please insert a series description!";
         }
+        
+        // Mandatory parameters
         // Read-only fields; should not never be empty
         if (!empty($_POST["serialnum"])){
             $serialnum = $_POST["serialnum"];
@@ -58,6 +60,7 @@
         if (!empty($_POST["manufacturer"])){
             $manufacturer = $_POST["manufacturer"];
         }
+        // TODO - Error if missing?
     }
     $filled = !empty($request_number) && !empty($date) && !empty($description) && !empty($doctor_id) &&
         !empty($series_id) && !empty($series_name) && !empty($series_description);

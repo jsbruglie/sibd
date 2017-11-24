@@ -107,7 +107,7 @@
         </div>
     </div>
 
-    <input type="hidden" name="visited" value="true">
+    <input type="hidden" name="visited" value="true"/>
 
     <button type="submit" class="btn btn-primary">Add Study and Series</button>
 </form>
