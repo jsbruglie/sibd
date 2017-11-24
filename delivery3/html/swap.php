@@ -37,7 +37,6 @@
             $cur_manufacturer = $_POST["cur_manufacturer"];
         }
     }
-
     $valid = !empty($patient) && !empty($start) && !empty($end)
     	&& !empty($serialnum) && !empty($manufacturer);
     	// && !empty($cur_serialnum) && !empty($cur_manufacturer);
@@ -49,14 +48,26 @@
     if ($valid)
     {
         // TODO - Swap
+        $date = date("Y-m-d h:i:s", time());
 
-        // Update end time of the current device to current time
-
-        // Create new time period
-
-        // Create new entry in wears table
+        var_dump($patient,$start,$end,$serialnum,$manufacturer,$cur_manufacturer,$cur_serialnum,$date);
         
-        $swap_result = false;
+        $result = query(
+            "UPDATE period 
+            NATURAL JOIN wears 
+            SET period.end = ?
+            WHERE wears.snum = ? 
+                AND wears.manuf = ?",$date, $cur_serialnum, $cur_manufacturer);
+        
+        $result = query(
+            "INSERT INTO period (start,end) VALUES
+            (?, "2999-12-31 00:00:00")",$date);
+
+        $result = query(
+            "INSERT INTO wears (start, end, snum, manuf, patient) VALUES
+            (?, "2999-12-31 00:00:00", ?,?,?)", $date, $serialnum, $manufacturer, $patient);
+      
+        $swap_result = $result;
     }
     else
     {

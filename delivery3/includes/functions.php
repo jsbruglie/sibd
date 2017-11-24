@@ -25,7 +25,6 @@
 
         // parameters, if any
         $parameters = array_slice(func_get_args(), 1);
-
         // try to connect to database
         static $handle;
         if (!isset($handle))

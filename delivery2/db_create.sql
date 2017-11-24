@@ -121,7 +121,7 @@ CREATE TABLE wears (
     manuf varchar(255) NOT NULL,
     patient int NOT NULL,
     PRIMARY KEY (start,end,patient),
-    FOREIGN KEY (start,end) REFERENCES period (start, end),
+    FOREIGN KEY (start,end) REFERENCES period (start, end) ON UPDATE CASCADE,
     FOREIGN KEY (patient) REFERENCES patient (number),
     FOREIGN KEY (snum,manuf) REFERENCES device (serialnum, manufacturer)
 );

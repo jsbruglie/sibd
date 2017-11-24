@@ -11,15 +11,15 @@
      */
 
     // Database name
-    define("DATABASE", "ist178990");
+    define("DATABASE", "ist179129");
 
     // Database password
-    define("PASSWORD", "");
+    define("PASSWORD", "upnm9764");
 
     // Database server
-    define("SERVER", "localhost");
+    define("SERVER", "db.ist.utl.pt");
 
     // Database username
-    define("USERNAME", "root");
+    define("USERNAME", "ist179129");
 
 ?>
