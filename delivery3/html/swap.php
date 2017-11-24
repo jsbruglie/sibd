@@ -47,25 +47,27 @@
     
     if ($valid)
     {
-        // TODO - Swap
-        $date = date("Y-m-d h:i:s", time());
 
-        var_dump($patient,$start,$end,$serialnum,$manufacturer,$cur_manufacturer,$cur_serialnum,$date);
+        $date = date("Y-m-d h:i:s", time());
         
+        // TODO - Make this a transaction
+        // Close current period
         $result = query(
             "UPDATE period 
             NATURAL JOIN wears 
             SET period.end = ?
             WHERE wears.snum = ? 
-                AND wears.manuf = ?",$date, $cur_serialnum, $cur_manufacturer);
+                AND wears.manuf = ?", $date, $cur_serialnum, $cur_manufacturer);
         
+        // Insert a new time period with undefined end
         $result = query(
-            "INSERT INTO period (start,end) VALUES
-            (?, "2999-12-31 00:00:00")",$date);
+            'INSERT INTO period (start,end) VALUES
+            (?, "2999-12-31 00:00:00")', $date);
 
+        // Insert new wears entry
         $result = query(
-            "INSERT INTO wears (start, end, snum, manuf, patient) VALUES
-            (?, "2999-12-31 00:00:00", ?,?,?)", $date, $serialnum, $manufacturer, $patient);
+            'INSERT INTO wears (start, end, snum, manuf, patient) VALUES
+            (?, "2999-12-31 00:00:00", ?,?,?)', $date, $serialnum, $manufacturer, $patient);
       
         $swap_result = $result;
     }
