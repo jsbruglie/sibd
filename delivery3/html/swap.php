@@ -92,7 +92,7 @@
             '<input type="hidden" name="manufacturer" value="$manufacturer">' .
             '<input type="hidden" name="cur_serialnum" value="' . $cur_serialnum . '">' .
             '<input type="hidden" name="cur_manufacturer" value="' . $cur_manufacturer . '">' .
-            '<button type="submit" class="btn btn-block btn-primary">Swap</button>' .
+            '<button type="submit" class="btn btn-sm btn-block btn-primary">Swap</button>' .
             '</form>';
 
         $dev_table = createTable($result,

@@ -70,10 +70,11 @@
 
     if ($filled)
     {
+        // TODO - Also verify time periods? As in only able to add a study on a date within the wearing period
         // Ensure patient wearing device is the object of the provided study request
         $valid = tryQuery(
-            "SELECT *
-            FROM patient, request, device
+            "SELECT name
+            FROM patient, request, device, wears
             WHERE request.number = ?
                 AND wears.snum = ?
                 AND wears.manuf = ?

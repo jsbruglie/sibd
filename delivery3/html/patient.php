@@ -40,7 +40,7 @@
                 '<input type="hidden" name="patient" value="$patient">' .
                 '<input type="hidden" name="cur_serialnum" value="$serialnum">' .
                 '<input type="hidden" name="cur_manufacturer" value="$manufacturer">' .
-                '<button type="submit" class="btn btn-sm btn-block btn-primary btn-space">Replace</button>' .
+                '<button type="submit" class="btn btn-sm btn-block btn-primary">Replace</button>' .
                 '</form>';
 
             // Study invisible form button
@@ -95,7 +95,7 @@
             $region_btn =
                 '<form action="region.php" method="post">' .
                 // TODO - add required POST parameters
-                '<button type="submit" class="btn btn-block btn-primary btn-space">Add region</button>' .
+                '<button type="submit" class="btn btn-sm btn-block btn-primary btn-space">Add region</button>' .
                 '</form>';
 
             $studies_table = createTable($result,

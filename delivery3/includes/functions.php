@@ -148,7 +148,7 @@
     {
         $num_cols = count($column_spec);
 
-        $table_html = '<table class="table">' . "\n";
+        $table_html = '<table class="table table-sm">' . "\n";
         // table head
         $table_html .= "<thead>\n<tr>\n";
         foreach ($column_spec as $col)
@@ -175,7 +175,7 @@
                 } else {
                     $entry = $row[$col[1]];
                 }
-                $table_html .= '<td class="col-sm-' . (int) (12 / $num_cols) . '">' . $entry . "</td>\n";
+                $table_html .= '<td>' . $entry . "</td>\n";
             }
             $table_html .= "</tr>\n";
         }
