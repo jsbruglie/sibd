@@ -15,9 +15,14 @@
 
     // Handle POST data
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (!empty($_POST["request_number"])){
+            $request_number = $_POST["request_number"];
+        // Complain only if there has been an invalid submit attempt
+        } else if (isset($_POST["visited"])){
+            $request_number_err = "Please insert the request id!";
+        }
         if (!empty($_POST["date"])){
             $date = $_POST["date"];
-        // Complain only if there has been an invalid submit attempt
         } else if (isset($_POST["visited"])){
             $date_err = "Please insert a date!";
         }
@@ -30,6 +35,11 @@
             $doctor_id = $_POST["doctor_id"];
         } else if (isset($_POST["visited"])){
             $doctor_id_err = "Please insert a doctor ID!";
+        }
+        if (!empty($_POST["series_id"])){
+            $series_id = $_POST["series_id"];
+        } else if (isset($_POST["visited"])){
+            $series_id_err = "Please insert a series ID!";
         }
         if (!empty($_POST["series_name"])){
             $series_name = $_POST["series_name"];
@@ -49,8 +59,8 @@
             $manufacturer = $_POST["manufacturer"];
         }
     }
-    $valid = !empty($date) && !empty($description) && !empty($doctor_id) &&
-        !empty($series_name) && !empty($series_description);
+    $valid = !empty($request_number) && !empty($date) && !empty($description) && !empty($doctor_id) &&
+        !empty($series_id) && !empty($series_name) && !empty($series_description);
 
     $error = empty($serialnum) || empty($manufacturer);
 
@@ -60,14 +70,19 @@
 
     if ($valid)
     {
-        // TODO
-        
-        // Transaction begin
-        // Try inserting study
-        // Try inserting series
-        // Error? Rollback : Commit
+        $insert_study = [
+            'INSERT INTO study (request_number, description, date, doctor_id, serial_number, manufacturer) VALUES
+                (?, ?, ?, ?, ?, ?),', [$request_number, $description, $date, $doctor_id, $serialnum, $manufacturer]
+        ];
 
-        $result = false;
+        $base_url = $_SERVER['SERVER_NAME'] . dirname($_SERVER['REQUEST_URI']) . "/series/" . $series_id;
+
+        $insert_series = [
+            'INSERT INTO series (series_id, name, base_url, request_number, description) VALUES
+                (?, ?, ?, ?, ?, ?),', [$series_id, $series_name, $base_url, $request_number, $series_description]
+        ];
+
+        $result = transact([$insert_study, $insert_series]);
     }
 
 ?>
