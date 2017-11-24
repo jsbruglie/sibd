@@ -48,16 +48,16 @@
     if ($valid)
     {
 
-        $date = date("Y-m-d h:i:s", time());
+        $date = date("Y-m-d H:i:s", time());
         
         // TODO - Make this a transaction
         // Close current period
         $result = query(
             "UPDATE period 
             NATURAL JOIN wears 
-            SET period.end = ?
-            WHERE wears.snum = ? 
-                AND wears.manuf = ?", $date, $cur_serialnum, $cur_manufacturer);
+            SET end = ?
+            WHERE snum = ? 
+                AND manuf = ?", $date, $cur_serialnum, $cur_manufacturer);
         
         // Insert a new time period with undefined end
         $result = query(

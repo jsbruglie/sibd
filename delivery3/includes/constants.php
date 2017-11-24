@@ -10,16 +10,13 @@
      *          Nuno Ferreira
      */
 
-    // Database name
-    define("DATABASE", "ist179129");
-
+// Database name
+    define("DATABASE", "ist178990");
     // Database password
-    define("PASSWORD", "upnm9764");
-
+    define("PASSWORD", "");
     // Database server
-    define("SERVER", "db.ist.utl.pt");
-
+    define("SERVER", "localhost");
     // Database username
-    define("USERNAME", "ist179129");
+    define("USERNAME", "root");
 
 ?>
