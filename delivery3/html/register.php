@@ -49,7 +49,7 @@
     if ($valid)
     {
         // Add patient to DB (number is set to AI)
-        $result = query(
+        $result = tryQuery(
             "INSERT INTO patient (number, name, birthday, address) VALUES
             (NULL, ?, ?, ?)", $name, $birthday, $address);
     }

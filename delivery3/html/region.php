@@ -53,7 +53,7 @@
     if ($valid)
     {
         // TODO - Check if query is correct
-        $result = query(
+        $result = tryQuery(
             "INSERT INTO region (series_id, elem_index, x1, y1, x2, y2) VALUES
             (?, ?, ?, ?, ?, ?)", $series_id, $elem_index, $x1, $y1, $x2, $y2);
 
