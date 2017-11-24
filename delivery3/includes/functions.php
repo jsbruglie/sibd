@@ -50,8 +50,8 @@
      *
      * @throws     PDOException on failure
      *
-     * @param      <type>   $sql         The sql
-     * @param      ...      $parameters  The parameters
+     * @param      string   $sql         The sql
+     * @param      array    $parameters  The parameters
      *
      * @return     An array of all rows in result set or false on (non-fatal) error.
      */
@@ -83,7 +83,12 @@
         }
     }
 
-    function tryQuery()
+    /**
+     * Attempts performing a database query
+     *
+     * @return     boolean  Whether the query was successful or not
+     */
+    function tryQuery(/* $sql_query, $param1, $param2 ...*/)
     {
         // SQL statement
         $sql = func_get_arg(0);
@@ -102,7 +107,7 @@
     /**
      * Performs a transaction for a given array of sql queries
      *
-     * @param      <type>   $queries  The array of sql queries
+     * @param      array    $queries  The array of sql queries
      *
      * @return     boolean  Whether the transaction was successful
      */
@@ -117,33 +122,35 @@
             {
                 $sql = $request[0];
                 $parameters = (count($request) == 1)? [] : $request[1]; 
-                echo "<h5>" . $sql . "</h5>";
-                var_dump($parameters);
                 $statement = $handle->prepare($sql);
                 $results = $statement->execute($parameters);
-                //$handle->exec($sql);
             }
         }
         catch (PDOException $e)
         {
-            echo "<h6>Exception! Rolling back...</h6>";
             $handle->rollBack();
             return false;    
         }
-
         $handle->commit();
-        echo "<h6>Success! Commiting...</h6>";
         return true;
     }
 
-    function createTable($table, $column_names)
+    /**
+     * Creates a table.
+     *
+     * @param      <type>  $table         The table
+     * @param      <type>  $column_spec   The array of column specifications
+     *
+     * @return     string  The HTML string of the desired table
+     */
+    function createTable($table, $column_spec)
     {
-        $num_cols = count($column_names);
+        $num_cols = count($column_spec);
 
         $table_html = '<table class="table">' . "\n";
         // table head
         $table_html .= "<thead>\n<tr>\n";        
-        foreach ($column_names as $col)
+        foreach ($column_spec as $col)
         {
             $table_html .= "<th>" . $col[0] . "</th>\n";
         }
@@ -154,7 +161,7 @@
         foreach ($table as $row)
         {
             $table_html .= "<tr>\n";
-            foreach ($column_names as $key => $col)
+            foreach ($column_spec as $key => $col)
             {
                 // Replace content of special columns
                 if (count($col) == 3){
@@ -172,7 +179,6 @@
             $table_html .= "</tr>\n";
         }
         $table_html .= "</tbody>\n";
-
         $table_html .= "</table>\n";
 
         return $table_html;
