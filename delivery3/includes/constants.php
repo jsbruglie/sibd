@@ -10,15 +10,12 @@
      *          Nuno Ferreira
      */
 
-    // Database name
+// Database name
     define("DATABASE", "ist178990");
-
     // Database password
     define("PASSWORD", "");
-
     // Database server
     define("SERVER", "localhost");
-
     // Database username
     define("USERNAME", "root");
 

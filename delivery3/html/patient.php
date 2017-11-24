@@ -28,7 +28,7 @@
                 AND manufacturer = manuf
                 AND serialnum = snum
                 AND patient.number = ?
-                AND datediff(current_date(), cast(wears.end AS date)) <= 0", $id);
+                AND timestampdiff(second,wears.end,current_timestamp) <= 0", $id);
         
         if ($result){
 
@@ -71,7 +71,7 @@
                 AND patient.number = wears.patient
                 AND manufacturer = manuf
                 AND serialnum = snum
-                AND datediff(current_date(), cast(wears.end AS date)) > 0", $id);
+                AND timestampdiff(second,wears.end,current_timestamp) > 0", $id);
         if ($result){
             $old_dev_table = createTable($result,
                 [["Start", "start"],
