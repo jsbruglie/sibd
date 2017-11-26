@@ -3,7 +3,7 @@
     <div class="form-group required row">
         <div class="col-sm-6">
             <label class="col-form-label" for="name">Series ID</label>
-            <input class="form-control" autofocus name="series_id" placeholder= "Element index" type="series_id"
+            <input class="form-control" autofocus name="series_id" placeholder= "Series ID" type="series_id"
                 <?php
                     if (isset($_POST['series_id'])) echo 'value="' . $_POST['series_id'] . '"';
                     else if (isset($series_id)) echo 'value="' . $series_id . '"';

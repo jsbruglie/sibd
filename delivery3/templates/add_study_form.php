@@ -79,7 +79,7 @@
 
     <h4>New Series</h4>
     <div class="form-group required row">
-        <div class="col-sm-2">
+        <div class="col-sm-4">
             <label class="col-form-label" for="series_id">Series ID</label>
             <input class="form-control" name="series_id" placeholder= "Series" type="text"
                 <?php if (isset($_POST['series_id'])) echo 'value="' . $_POST['series_id'] . '"'; ?>
@@ -88,21 +88,13 @@
             <span class="alert text-danger" role="alert"><?php echo $series_id_err;?>
             <?php endif ?></span>
         </div>
-        <div class="col-sm-4">
+        <div class="col">
             <label class="col-form-label" for="series_name">Name</label>
             <input class="form-control" name="series_name" placeholder= "Series" type="text"
                 <?php if (isset($_POST['series_name'])) echo 'value="' . $_POST['series_name'] . '"'; ?>
             />
             <?php if (isset($series_name_err)): ?>
             <span class="alert text-danger" role="alert"><?php echo $series_name_err;?>
-            <?php endif ?></span>
-        </div>
-        <div class="col">
-            <label class="col-form-label" for="series_description">Description</label>
-            <input class="form-control" name="series_description" placeholder="Series description" type="text"
-                <?php if (isset($_POST['series_description'])) echo 'value="' . $_POST['series_description'] . '"' ?> />
-            <?php if (isset($series_description_err)): ?>
-            <span class="alert text-danger" role="alert"><?php echo $series_description_err;?>
             <?php endif ?></span>
         </div>
     </div>

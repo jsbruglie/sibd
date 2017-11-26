@@ -46,11 +46,6 @@
         } else if (isset($_POST["visited"])){
             $series_name_err = "Please insert a series name!";
         }
-        if (!empty($_POST["series_description"])){
-            $series_description = $_POST["series_description"];
-        } else if (isset($_POST["visited"])){
-            $series_description_err = "Please insert a series description!";
-        }
         
         // Mandatory parameters
         // Read-only fields; should not never be empty
@@ -63,7 +58,7 @@
         // TODO - Error if missing?
     }
     $filled = !empty($request_number) && !empty($date) && !empty($description) && !empty($doctor_id) &&
-        !empty($series_id) && !empty($series_name) && !empty($series_description);
+        !empty($series_id) && !empty($series_name);
 
     $error = empty($serialnum) || empty($manufacturer);
 
@@ -84,7 +79,7 @@
                 AND patient.number = request.patient_id
                 AND wears.patient = patient.number", $request_number, $serialnum, $manufacturer);
 
-        if ($valid !== false){
+        if ($valid){
             // SQL query to insert study
             $insert_study = [
                 'INSERT INTO study (request_number, description, date, doctor_id, serial_number, manufacturer) VALUES
@@ -95,7 +90,7 @@
             $base_url = "http://" . $_SERVER['SERVER_NAME'] . dirname($_SERVER['REQUEST_URI']) . "/series/" . $series_id;
             $insert_series = [
                 'INSERT INTO series (series_id, name, base_url, request_number, description) VALUES
-                    (?, ?, ?, ?, ?)', [$series_id, $series_name, $base_url, $request_number, $series_description]
+                    (?, ?, ?, ?, ?)', [$series_id, $series_name, $base_url, $request_number, $description]
             ];
 
             // Perform transaction
