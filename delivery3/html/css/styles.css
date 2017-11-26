@@ -49,12 +49,15 @@ form {
 .btn-primary {
     margin-right: 5px;
     margin-left: 5px;
-    margin-bottom: 5px;
 }
 
 /* Tables */
 table th {
     text-align: center;
+}
+
+table tr {
+    margin-bottom: 5px;
 }
 
 .table {

@@ -47,29 +47,28 @@
 
     if ($valid)
     {
-
         $date = date("Y-m-d H:i:s", time());
 
-        // TODO - Make this a transaction
         // Close current period
-        $result = tryQuery(
-            "UPDATE period
-            NATURAL JOIN wears
-            SET end = ?
-            WHERE snum = ?
-                AND manuf = ?", $date, $cur_serialnum, $cur_manufacturer);
+        $update_period = [
+            'UPDATE period NATURAL JOIN wears
+            SET end = ? WHERE snum = ? AND manuf = ?
+            AND timestampdiff(second, wears.end , current_timestamp) <= 0', [$date, $cur_serialnum, $cur_manufacturer]
+        ];
 
         // Insert a new time period with undefined end
-        $result = tryQuery(
-            'INSERT INTO period (start,end) VALUES
-            (?, "2999-12-31 00:00:00")', $date);
+        $new_period = [
+            'INSERT INTO period (start, end) VALUES
+            (?, "2999-12-31 00:00:00")', [$date]
+        ];
 
-        // Insert new wears entry
-        $result = tryQuery(
+        $new_wears = [
             'INSERT INTO wears (start, end, snum, manuf, patient) VALUES
-            (?, "2999-12-31 00:00:00", ?, ?, ?)', $date, $serialnum, $manufacturer, $patient);
+            (?, "2999-12-31 00:00:00", ?, ?, ?)', [$date, $serialnum, $manufacturer, $patient]
+        ];
 
-        $swap_result = $result;
+        $swap_result = transact([$update_period, $new_period, $new_wears]);
+        list($success, $sql_error) = $swap_result;
     }
     else
     {
@@ -111,18 +110,18 @@
             <h4>Choose an available device</h4>
             <?php echo $dev_table ?>
 
-            <?php elseif ($swap_result === false): ?>
+            <?php elseif (isset($success) && $success == false): ?>
             <div class="alert alert-danger">
-                <strong>Error!</strong> Could not replace device.
+                <strong>Error!</strong> Could not replace device: <p><?= $sql_error ?></p>
             </div>
 
-            <?php else: ?>
+            <?php elseif (isset($success)): ?>
             <div class="alert alert-success">
                 <strong>Success!</strong> Replaced device.
             </div>
             <?php endif ?>
 
-
+            <a class="btn btn-link" href="index.php">Go Back</a>
 
         </div>
 
