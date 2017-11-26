@@ -69,7 +69,7 @@
         // TODO - Validate query
         // Ensure the region belongs to a study with the correct request number
         $valid = tryQuery(
-            "SELECT name
+            "SELECT patient.name
             FROM patient, request, study, series
             WHERE series.series_id = ?
                 AND request.number = ?

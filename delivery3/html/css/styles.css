@@ -45,12 +45,6 @@ form {
   color:red;
 }
 
-/* Buttons */
-.btn-primary {
-    margin-right: 5px;
-    margin-left: 5px;
-}
-
 /* Tables */
 table th {
     text-align: center;
