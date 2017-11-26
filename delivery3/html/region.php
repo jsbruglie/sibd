@@ -81,8 +81,17 @@
                 "INSERT INTO region (series_id, elem_index, x1, y1, x2, y2) VALUES
                 (?, ?, ?, ?, ?, ?)", $series_id, $elem_index, $x1, $y1, $x2, $y2);
 
-            // TODO - Detect overlap
-            $overlap = false;
+            // TODO - Detect overlap - overlap is true if there exists an overlap
+            $overlap = tryQuery(
+                "SELECT *  
+                FROM request,study,series,element, region
+                WHERE request.patient_id = ?
+                    AND request.number = study.request_number
+                    AND request.number = series.request_number
+                    AND study.description = series.description
+                    AND region.series_id = series.series_id 
+                    AND region_overlaps_element(region.series_id, region.elem_index,?,?,?,?)
+                    ORDER BY study.date DESC LIMIT 1", $patient_number,$x1,$y1,$x2,$y2);
         }
     }
 
@@ -108,9 +117,9 @@
             <div class="alert alert-success">
                 <strong>Success!</strong> Inserted region in database.
                 <?php if ($overlap): ?>
-                No overlap with previously acquired regions detected: new clinical evidence.
-                <?php else: ?>
                 Overlap with previously acquired regions detected.
+                <?php else: ?>
+                No overlap with previously acquired regions detected: new clinical evidence.
                 <?php endif ?>
             </div>
             <?php endif ?>
