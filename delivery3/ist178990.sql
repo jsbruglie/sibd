@@ -27,6 +27,9 @@ CREATE TABLE patient (
     PRIMARY KEY (number)
 );
 
+ALTER TABLE `patient`
+  MODIFY `number` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;
+
 CREATE TABLE doctor (
     doctor_id int NOT NULL,
     number int NOT NULL,
@@ -192,9 +195,3 @@ INSERT INTO `wears` (`start`, `end`, `snum`, `manuf`, `patient`) VALUES
 ('2017-10-11 00:00:00', '2017-10-20 00:00:00', 'EuIeoloUxG', 'Vapor Medical', 2),
 ('2017-11-01 00:00:00', '2017-11-11 00:00:00', 'a87S17UT6b', 'Medtronic', 3),
 ('2017-11-22 00:00:00', '2017-12-12 00:00:00', 'a87S17UT6b', 'Medtronic', 2);
-
-ALTER TABLE `patient`
-  MODIFY `number` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
-ALTER TABLE `study`
-  MODIFY `request_number` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
