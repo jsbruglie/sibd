@@ -1,5 +1,4 @@
 <?php
-
     /**
      * @file    constants.php
      *
@@ -9,7 +8,6 @@
      *          Daniel Sousa
      *          Nuno Ferreira
      */
-
 // Database name
     define("DATABASE", "ist178990");
     // Database password
@@ -18,5 +16,4 @@
     define("SERVER", "localhost");
     // Database username
     define("USERNAME", "root");
-
 ?>
