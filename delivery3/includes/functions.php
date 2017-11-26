@@ -100,7 +100,7 @@
         }
         catch (PDOException $e)
         {
-            echo $e->getMessage();
+            //echo $e->getMessage();
             return false;
         }
     }

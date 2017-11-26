@@ -101,7 +101,7 @@
 
             <?php elseif ($result === false): ?>
             <div class="alert alert-danger">
-                <strong>Error!</strong> Could not insert region in database.
+                <strong>Error!</strong> Could not insert region in database. Make sure the data element exists.
             </div>
 
             <?php else: ?>
