@@ -60,9 +60,6 @@
     $filled = !empty($series_id) && !empty($elem_index) && empty($xy_err)
         && !empty($patient_number) && !(empty($request_number));
 
-    var_dump($series_id, $elem_index, $xy_err, $patient_number, $request_number); 
-    var_dump($filled);
-
     // Render header
     $title = "Create region";
     require("../templates/header.php");
