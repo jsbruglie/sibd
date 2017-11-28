@@ -6,6 +6,10 @@
 -- Description: Creates the database
 -- =================================================================================================
 
+-- =================================================================================================
+-- Create database
+-- =================================================================================================
+
 DROP TABLE IF EXISTS wears;
 DROP TABLE IF EXISTS region;
 DROP TABLE IF EXISTS reading;
@@ -129,24 +133,34 @@ CREATE TABLE wears (
     FOREIGN KEY (snum,manuf) REFERENCES device (serialnum, manufacturer)
 );
 
+-- =================================================================================================
+-- Populate database
+-- =================================================================================================
+
 INSERT INTO `patient` (`number`, `name`, `birthday`, `address`) VALUES
 (1, 'Miley Dudley', '1977-12-07', 'Hillcrest Avenue'),
 (2, 'Alivia Mack', '1989-04-07', 'Depot Street'),
 (3, 'Raymond Glass', '1996-09-25', 'Summit Avenue'),
-(4, 'Nuno Ferreira', '2017-11-07', 'Hello'),
-(5, 'Mariana Martins', '1997-04-25', 'Address');
+(4, 'David King', '1972-03-02', '8th Street West'),
+(5, 'Louise White', '1967-05-05', 'Ivy Lane');
 
 INSERT INTO `doctor` (`doctor_id`, `number`) VALUES
 (1, 1),
 (2, 2),
-(3, 3);
+(3, 3),
+(4, 4),
+(5, 5);
 
 INSERT INTO `device` (`serialnum`, `manufacturer`, `model`) VALUES
-('a87S17UT6b', 'Medtronic', 'device 1'),
-('EuIeoloUxG', 'Vapor Medical', 'RGB camera'),
-('svKAm324h3', 'Medtronic', 'device 10'),
-('wZVhG2FFGh', 'Zoom Medical', 'dev 1'),
-('afxcvxcb', 'Medtronic', 'device 100');
+('med_1', 'Medtronic', 'model m1'),
+('med_2', 'Medtronic', 'model m2'),
+('med_3', 'Medtronic', 'model m3'),
+('med_4', 'Medtronic', 'model m4'),
+('med_5', 'Medtronic', 'model m5'),
+('vap_1', 'Vapor Medical', 'model v1'),
+('vap_2', 'Vapor Medical', 'model v2'),
+('vap_3', 'Vapor Medical', 'model v3'),
+('zoom_1', 'Zoom Medical', 'model z1');
 
 INSERT INTO `request` (`number`, `patient_id`, `doctor_id`, `date_request`) VALUES
 (1, 1, 1, '2016-08-06'),
@@ -155,22 +169,20 @@ INSERT INTO `request` (`number`, `patient_id`, `doctor_id`, `date_request`) VALU
 (4, 3, 3, '2016-08-09');
 
 INSERT INTO `study` (`request_number`, `description`, `date`, `doctor_id`, `serial_number`, `manufacturer`) VALUES
-(1, 'LDL cholesterol analysis', '2016-08-30', 2, 'a87S17UT6b', 'Medtronic'),
 (3, 'LDL cholesterol analysis', '2016-08-19', 2, 'svKAm324h3', 'Medtronic'),
 (1, 'Posture Analysis', '2016-09-13', 3, 'EuIeoloUxG', 'Vapor Medical'),
 (2, 'LDL cholesterol analysis', '2016-08-30', 2, 'a87S17UT6b', 'Medtronic'),
 (4, 'LDL cholesterol analysis', '2016-08-19', 2, 'svKAm324h3', 'Medtronic');
 
 INSERT INTO `series` (`series_id`, `name`, `base_url`, `request_number`, `description`) VALUES
-(1, 'Posture analysis image collection', 'http://data_db.php?series_id=1', 1, 'Posture Analysis');
 
 INSERT INTO `element` (`series_id`, `elem_index`) VALUES
 (1, 1),
 (1, 2),
-(1, 3);
+(2, 1),
+(2, 2),
 
 INSERT INTO `period` (`start`, `end`) VALUES
-('2017-10-11 00:00:00', '2017-10-20 00:00:00'),
 ('2017-11-01 00:00:00', '2017-11-11 00:00:00'),
 ('2017-11-22 00:00:00', '2017-12-12 00:00:00');
 
@@ -178,20 +190,45 @@ INSERT INTO `sensor` (`snum`, `manuf`, `units`) VALUES
 ('a87S17UT6b', 'Medtronic', 'LDL cholesterol in mg/dL'),
 ('EuIeoloUxG', 'Vapor Medical', 'R8G8B8'),
 ('svKAm324h3', 'Medtronic', 'LDL cholesterol in mg/dL'),
-('wZVhG2FFGh', 'Zoom Medical', 'mV');
-
-INSERT INTO `reading` (`snum`, `manuf`, `datetime`, `value`) VALUES
-('a87S17UT6b', 'Medtronic', '2017-02-09 00:00:00', 201),
-('a87S17UT6b', 'Medtronic', '2016-05-01 00:00:00', 200),
-('a87S17UT6b', 'Medtronic', '2017-10-29 00:00:00', 230),
-('a87S17UT6b', 'Medtronic', '2017-11-01 00:00:00', 210),
 ('a87S17UT6b', 'Medtronic', '2017-11-05 00:01:00', 210);
+('2016-10-10 00:00:00', '2017-10-10 00:00:00'),
+('2017-10-10 00:00:00', '2999-12-31 00:00:00'),
+('2016-06-20 00:00:00', '2017-07-05 00:00:00'),
+('2017-07-05 00:00:00', '2999-12-31 00:00:00');
+('2016-06-20 00:00:00', '2017-07-05 00:00:00', 'vap_1', 'Vapor Medical', 2),
+('2017-07-05 00:00:00', '2999-12-31 00:00:00', 'vap_2', 'Vapor Medical', 2);
 
 INSERT INTO `region` (`series_id`, `elem_index`, `x1`, `y1`, `x2`, `y2`) VALUES
-(1, 1, 0.2, 0.2, 0.4, 0.4),
-(1, 1, 0.6, 0.6, 0.8, 0.8);
+(2, 2, 0.7, 0.7, 0.8, 0.8);
 
 INSERT INTO `wears` (`start`, `end`, `snum`, `manuf`, `patient`) VALUES
 ('2017-10-11 00:00:00', '2017-10-20 00:00:00', 'EuIeoloUxG', 'Vapor Medical', 2),
 ('2017-11-01 00:00:00', '2017-11-11 00:00:00', 'a87S17UT6b', 'Medtronic', 3),
 ('2017-11-22 00:00:00', '2017-12-12 00:00:00', 'a87S17UT6b', 'Medtronic', 2);
+/* Reorder coordinates */
+IF x1a > x2a THEN SET x1a = x2a+x1a; SET x2a = x1a-x2a; SET x1a = x1a-x2a; END IF;
+IF x1b > x2b THEN SET x1b = x2b+x1b; SET x2b = x1b-x2b; SET x1b = x1b-x2b; END IF;
+IF y1a > y2a THEN SET y1a = y2a+y1a; SET y2a = y1a-y2a; SET y1a = y1a-y2a; END IF;
+IF y1b > y2b THEN SET y1b = y2b+y1b; SET y2b = y1b-y2b; SET y1b = y1b-y2b; END IF;
+
+IF x1b > x2a OR y1b > y2a OR x1a > x2b OR y1a > y2b THEN
+RETURN FALSE;
+ELSE
+RETURN TRUE;
+END IF;
+END;
+$$
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS region_overlaps_element;
+DELIMITER $$
+CREATE FUNCTION region_overlaps_element(series_id int, elem_index int, x1 float, y1 float, x2 float, y2 float)
+RETURNS BOOLEAN
+BEGIN
+RETURN EXISTS (SELECT * FROM region AS ra
+WHERE (ra.series_id = series_id)
+AND (ra.elem_index = elem_index)
+AND region_overlaps(ra.x1,ra.x2,ra.y1,ra.y2,x1,y2,y1,y2));
+END;
+$$
+DELIMITER ; 
