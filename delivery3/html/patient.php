@@ -101,6 +101,7 @@
                 '<form action="region.php" method="post">' .
                 '<input type="hidden" name="patient_number" value="' . $id . '">' .
                 '<input type="hidden" name="request_number" value="$request_number">' .
+                '<input type="hidden" name="description" value="$description">' .
                 '<button type="submit" class="btn btn-sm btn-block btn-primary btn-space">Add region</button>' .
                 '</form>';
 

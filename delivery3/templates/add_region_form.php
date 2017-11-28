@@ -77,6 +77,9 @@
     <input type="hidden" name="request_number"
         <?php if (isset($_POST['request_number'])) echo 'value="' . $_POST['request_number'] . '"' ?>
     />
+    <input type="hidden" name="description"
+        <?php if (isset($_POST['description'])) echo 'value="' . $_POST['description'] . '"' ?>
+    />
 
     <button type="submit" class="btn btn-primary">Add Region</button>
 </form>

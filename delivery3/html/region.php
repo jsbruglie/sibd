@@ -46,6 +46,9 @@
         if (!empty($_POST["request_number"])) {
             $request_number = $_POST["request_number"];
         }
+        if (!empty($_POST["description"])) {
+            $description = $_POST["description"];
+        }
         // TODO - Error if missing?
 
         if (!empty($_POST["visited"])) {
@@ -58,7 +61,7 @@
         }    
     }
     $filled = !empty($series_id) && !empty($elem_index) && empty($xy_err)
-        && !empty($patient_number) && !(empty($request_number));
+        && !empty($patient_number) && !(empty($request_number)) && !empty($description);
 
     // Render header
     $title = "Create region";
@@ -89,11 +92,13 @@
 
             $req_numb = tryQuery(
                 "SELECT * 
-                FROM study,request 
+                FROM study, request 
                 WHERE study.request_number = request.number
                     AND request.patient = :patient_number
-                    /*AND study.description = (description) - BORREGO METE AQUI UMA VARIÁVEL DE SEESÃO DA PAGINA ANTERIOR PARA TER A DESCRIPTION*/
-                    ORDER BY study.date DESC LIMIT 1");
+                    AND study.description = :description
+                    ORDER BY study.date DESC LIMIT 1",
+                array(':patient_number' => $patient_number, ':description' => $description)
+            );
 
             $overlap = tryQuery(
                 "SELECT *  
@@ -101,7 +106,7 @@
                 WHERE :req_numb = series.request_number
                     AND study.description = series.description
                     AND region.series_id = series.series_id 
-                    AND region_overlaps_element(region.series_id, region.elem_index,:x1,:y1,:x2,:y2)");
+                    AND region_overlaps_element(region.series_id, region.elem_index,:x1,:y1,:x2,:y2)",
                 array('req_numb'=> $req_numb, ':patient_number' => $patient_number,
                         ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
             );
