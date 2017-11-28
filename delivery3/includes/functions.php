@@ -62,8 +62,7 @@
 
         // prepare SQL statement
         $statement = $handle->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-        if ($statement === false)
-        {
+        if ($statement === false){
             // Trigger error
             trigger_error($handle->errorInfo()[2], E_USER_ERROR);
             exit;
@@ -73,12 +72,16 @@
         $results = $statement->execute($parameters);
 
         // return result sets rows, if any
-        if ($results !== false)
-        {   
-            return $statement->fetchAll(PDO::FETCH_ASSOC);
-        }
-        else
-        {
+        if ($results !== false){
+            try {
+                $output = $statement->fetchAll(PDO::FETCH_ASSOC);
+                return $output;
+            } catch (PDOException $e) {
+                // Exception is thrown when there is nothing to fetch. (e.g. successful insertion or update)
+                // It is safe to disregard it and return success
+                return true;
+            }
+        } else {
             return false;
         }
     }
@@ -99,7 +102,7 @@
         }
         catch (PDOException $e)
         {
-            echo $e->getMessage();
+            //echo $e->getMessage();
             return false;
         }
     }
