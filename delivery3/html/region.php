@@ -87,17 +87,26 @@
                         ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
             );
 
+            $query1 = tryQuery(
+                "SELECT * 
+                FROM study,request 
+                WHERE study.request_number = request.number
+                    AND request.patient = :patient_number
+                    /*AND study.description = (description) - BORREGO METE AQUI UMA VARIÁVEL DE SEESÃO DA PAGINA ANTERIOR PARA TER A DESCRIPTION*/
+                    ORDER BY study.date DESC LIMIT 1");
+
+            foreach($query1) as ($key){
+                $req_numb = $key['request_number'];
+            }
+
             $overlap = tryQuery(
                 "SELECT *  
-                FROM request,study,series,element, region
-                WHERE request.patient_id = :patient_number
-                    AND request.number = study.request_number
-                    AND request.number = series.request_number
+                FROM study,series,element,region
+                WHERE :req_numb = series.request_number
                     AND study.description = series.description
                     AND region.series_id = series.series_id 
-                    AND region_overlaps_element( region.series_id, region.elem_index, :x1, :y1, :x2, :y2)
-                    ORDER BY study.date DESC LIMIT 1",
-                array(  ':patient_number' => $patient_number,
+                    AND region_overlaps_element(region.series_id, region.elem_index,:x1,:y1,:x2,:y2)");
+                array('req_numb'=> $req_numb, ':patient_number' => $patient_number,
                         ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
             );
         }
