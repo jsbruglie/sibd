@@ -90,7 +90,7 @@
                         ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
             );
 
-            $req_numb = tryQuery(
+            $query1 = tryQuery(
                 "SELECT * 
                 FROM study, request 
                 WHERE study.request_number = request.number
@@ -100,14 +100,22 @@
                 array(':patient_number' => $patient_number, ':description' => $description)
             );
 
+            if(!$query1)
+                //old studies do not exist, act accordingly (?)
+
+            foreach($query1) as ($key){
+                $req_numb = $key['request_number'];
+            }
+
             $overlap = tryQuery(
                 "SELECT *  
                 FROM study,series,region
                 WHERE :req_numb = series.request_number
                     AND study.description = series.description
-                    AND region.series_id = series.series_id 
+                    AND region.series_id = series.series_id
+                    AND study.description = :description
                     AND region_overlaps_element(region.series_id, region.elem_index,:x1,:y1,:x2,:y2)",
-                array('req_numb'=> $req_numb, ':patient_number' => $patient_number,
+                array('req_numb'=> $req_numb, ':description' => $description,
                         ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
             );
         }
