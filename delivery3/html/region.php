@@ -101,7 +101,7 @@
 
             $overlap = tryQuery(
                 "SELECT *  
-                FROM study,series,element,region
+                FROM study,series,region
                 WHERE :req_numb = series.request_number
                     AND study.description = series.description
                     AND region.series_id = series.series_id 
