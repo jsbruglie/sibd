@@ -89,20 +89,19 @@
                 array(  ':series_id' => $series_id, ':elem_index' => $elem_index,
                         ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
             );
-
+            var_dump($result);
             $query_req_number = tryQuery(
-                "SELECT * 
+                "SELECT request_number 
                 FROM study, request 
                 WHERE study.request_number = request.number
-                    AND request.patient = :patient_number
+                    AND request.patient_id = :patient_number
                     AND study.description = :description
                     ORDER BY study.date DESC LIMIT 1",
                 array(':patient_number' => $patient_number, ':description' => $description)
             );
 
             if ($query_req_number !== false){
-                $req_numb = $query_req_number['request_number'];
-
+                $req_numb = $query_req_number[0]['request_number'];
                 $overlap = tryQuery(
                     "SELECT *  
                     FROM study,series,region
