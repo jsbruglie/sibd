@@ -74,7 +74,7 @@
 
         // return result sets rows, if any
         if ($results !== false)
-        {
+        {   
             return $statement->fetchAll(PDO::FETCH_ASSOC);
         }
         else
@@ -99,7 +99,7 @@
         }
         catch (PDOException $e)
         {
-            //echo $e->getMessage();
+            echo $e->getMessage();
             return false;
         }
     }

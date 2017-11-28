@@ -89,7 +89,7 @@
                 array(  ':series_id' => $series_id, ':elem_index' => $elem_index,
                         ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
             );
-            var_dump($result);
+            echo $result;
             $query_req_number = tryQuery(
                 "SELECT request_number 
                 FROM study, request 
