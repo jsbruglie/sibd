@@ -83,13 +83,6 @@
         );
 
         if ($valid !== false){
-            $result = tryQuery(
-                "INSERT INTO region (series_id, elem_index, x1, y1, x2, y2) VALUES
-                (:series_id, :elem_index, :x1, :y1, :x2, :y2)",
-                array(  ':series_id' => $series_id, ':elem_index' => $elem_index,
-                        ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
-            );
-            echo $result;
             $query_req_number = tryQuery(
                 "SELECT request_number 
                 FROM study, request 
@@ -113,9 +106,17 @@
                     array('req_numb'=> $req_numb, ':description' => $description,
                             ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
                 );
+
             } else {
                 $overlap = false;
             }
+            
+            $result = tryQuery(
+                "INSERT INTO region (series_id, elem_index, x1, y1, x2, y2) VALUES
+                (:series_id, :elem_index, :x1, :y1, :x2, :y2)",
+                array(  ':series_id' => $series_id, ':elem_index' => $elem_index,
+                        ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
+            );
         }
     }
 
