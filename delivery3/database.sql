@@ -163,48 +163,160 @@ INSERT INTO `device` (`serialnum`, `manufacturer`, `model`) VALUES
 ('zoom_1', 'Zoom Medical', 'model z1');
 
 INSERT INTO `request` (`number`, `patient_id`, `doctor_id`, `date_request`) VALUES
-(1, 1, 1, '2016-08-06'),
-(2, 3, 3, '2017-07-04'),
-(3, 1, 1, '2016-08-07'),
-(4, 3, 3, '2016-08-09');
+(1, 1, 1, '2016-01-01'),
+(2, 2, 2, '2017-01-01'),
+(3, 2, 2, '2016-01-01'),
+(4, 3, 3, '2016-01-01');
 
 INSERT INTO `study` (`request_number`, `description`, `date`, `doctor_id`, `serial_number`, `manufacturer`) VALUES
-(3, 'LDL cholesterol analysis', '2016-08-19', 2, 'svKAm324h3', 'Medtronic'),
-(1, 'Posture Analysis', '2016-09-13', 3, 'EuIeoloUxG', 'Vapor Medical'),
-(2, 'LDL cholesterol analysis', '2016-08-30', 2, 'a87S17UT6b', 'Medtronic'),
-(4, 'LDL cholesterol analysis', '2016-08-19', 2, 'svKAm324h3', 'Medtronic');
+(2, 'Study 1-1', '2016-07-25', 2, 'vap_1', 'Vapor Medical'),
+(2, 'Study 1-2', '2016-08-25', 2, 'vap_1', 'Vapor Medical'),
+(2, 'Study 1-3', '2016-09-25', 2, 'vap_1', 'Vapor Medical');
 
 INSERT INTO `series` (`series_id`, `name`, `base_url`, `request_number`, `description`) VALUES
+(1, 'Data series 1-1', 'http:/localhost/sibd/delivery3/html/series/1', 2, 'Study 1-1'),
+(2, 'Data series 1-2', 'http:/localhost/sibd/delivery3/html/series/2', 2, 'Study 1-2'),
+(3, 'Data series 1-3', 'http:/localhost/sibd/delivery3/html/series/3', 2, 'Study 1-3');
 
 INSERT INTO `element` (`series_id`, `elem_index`) VALUES
 (1, 1),
 (1, 2),
+(1, 3),
 (2, 1),
 (2, 2),
+(2, 3),
+(3, 1),
+(3, 2),
+(3, 3);
 
 INSERT INTO `period` (`start`, `end`) VALUES
-('2017-11-01 00:00:00', '2017-11-11 00:00:00'),
-('2017-11-22 00:00:00', '2017-12-12 00:00:00');
-
-INSERT INTO `sensor` (`snum`, `manuf`, `units`) VALUES
-('a87S17UT6b', 'Medtronic', 'LDL cholesterol in mg/dL'),
-('EuIeoloUxG', 'Vapor Medical', 'R8G8B8'),
-('svKAm324h3', 'Medtronic', 'LDL cholesterol in mg/dL'),
-('a87S17UT6b', 'Medtronic', '2017-11-05 00:01:00', 210);
 ('2016-10-10 00:00:00', '2017-10-10 00:00:00'),
 ('2017-10-10 00:00:00', '2999-12-31 00:00:00'),
+('2017-08-01 00:00:00', '2999-12-31 00:00:00'),
 ('2016-06-20 00:00:00', '2017-07-05 00:00:00'),
 ('2017-07-05 00:00:00', '2999-12-31 00:00:00');
+
+INSERT INTO `wears` (`start`, `end`, `snum`, `manuf`, `patient`) VALUES
+('2016-10-10 00:00:00', '2017-10-10 00:00:00', 'med_2', 'Medtronic', 1),
+('2017-10-10 00:00:00', '2999-12-31 00:00:00', 'med_1', 'Medtronic', 1),
+('2017-08-01 00:00:00', '2999-12-31 00:00:00', 'vap_1', 'Vapor Medical', 1),
 ('2016-06-20 00:00:00', '2017-07-05 00:00:00', 'vap_1', 'Vapor Medical', 2),
 ('2017-07-05 00:00:00', '2999-12-31 00:00:00', 'vap_2', 'Vapor Medical', 2);
 
 INSERT INTO `region` (`series_id`, `elem_index`, `x1`, `y1`, `x2`, `y2`) VALUES
+(1, 1, 0.1, 0.1, 0.2, 0.2),
+(1, 2, 0.3, 0.3, 0.4, 0.4),
+(2, 1, 0.5, 0.5, 0.6, 0.6),
 (2, 2, 0.7, 0.7, 0.8, 0.8);
 
-INSERT INTO `wears` (`start`, `end`, `snum`, `manuf`, `patient`) VALUES
-('2017-10-11 00:00:00', '2017-10-20 00:00:00', 'EuIeoloUxG', 'Vapor Medical', 2),
-('2017-11-01 00:00:00', '2017-11-11 00:00:00', 'a87S17UT6b', 'Medtronic', 3),
-('2017-11-22 00:00:00', '2017-12-12 00:00:00', 'a87S17UT6b', 'Medtronic', 2);
+-- =================================================================================================
+-- Add triggers
+-- =================================================================================================
+
+DROP TRIGGER IF EXISTS check_doctor_insert;
+DELIMITER $$
+CREATE TRIGGER check_doctor_insert BEFORE INSERT ON study
+FOR EACH row
+BEGIN 
+    IF EXISTS (SELECT * 
+        FROM request 
+        WHERE number = new.request_number 
+        AND doctor_id = new.doctor_id) THEN
+        SIGNAL SQLSTATE '45000' set message_text = 'That doctor cannot perform the exam.';
+    END IF;  
+
+END;
+$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS check_doctor_update;
+DELIMITER $$
+CREATE TRIGGER check_doctor_update BEFORE UPDATE ON study
+FOR EACH row
+BEGIN 
+    IF EXISTS (SELECT * 
+        FROM request 
+        WHERE number = new.request_number 
+        AND doctor_id = new.doctor_id) THEN
+        SIGNAL SQLSTATE '45000' set message_text = 'That doctor cannot perform the exam.';
+    END IF;  
+
+END;
+$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS check_overlap_insert;
+DELIMITER $$
+CREATE TRIGGER check_overlap_insert BEFORE INSERT ON wears
+FOR EACH row
+BEGIN
+    IF EXISTS (SELECT *
+        FROM wears
+        WHERE snum = new.snum
+        AND manuf = new.manuf
+        AND DATEDIFF(end,new.start) > 0
+        AND DATEDIFF(start,new.end) < 0) THEN
+        SIGNAL SQLSTATE '45000' set message_text = 'Overlapping Periods.';
+    END IF;  
+
+END;
+$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS check_overlap_update;
+DELIMITER $$
+CREATE TRIGGER check_overlap_update BEFORE UPDATE ON wears
+FOR EACH row
+BEGIN
+    IF EXISTS (SELECT *
+        FROM wears
+        WHERE snum = new.snum
+        AND manuf = new.manuf
+        AND DATEDIFF(end,new.start) > 0
+        AND DATEDIFF(start,new.end) < 0) THEN
+        SIGNAL SQLSTATE '45000' set message_text = 'Overlapping Periods.';
+    END IF;  
+
+END;
+$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS check_period_insert;
+DELIMITER $$
+CREATE TRIGGER check_period_insert BEFORE INSERT ON period
+FOR EACH row
+BEGIN 
+    IF DATEDIFF(new.end,new.start) < 0 THEN
+        SIGNAL SQLSTATE '45000' set message_text = 'The period is not valid. End switched with start.';
+    END IF;  
+
+END;
+$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS check_period_update;
+DELIMITER $$
+CREATE TRIGGER check_period_update BEFORE UPDATE ON period
+FOR EACH row
+BEGIN 
+    IF DATEDIFF(new.end,new.start) < 0 THEN 
+        SIGNAL SQLSTATE '45000' set message_text = 'The period is not valid. End switched with start.';
+    END IF;  
+
+END;
+$$
+DELIMITER ;
+
+-- =================================================================================================
+-- Add function
+-- =================================================================================================
+
+DROP FUNCTION IF EXISTS region_overlaps;
+DELIMITER $$
+CREATE FUNCTION region_overlaps(x1a float, x2a float, y1a float, y2a float, x1b float, x2b float, y1b float, y2b float)
+RETURNS BOOLEAN
+BEGIN
+
 /* Reorder coordinates */
 IF x1a > x2a THEN SET x1a = x2a+x1a; SET x2a = x1a-x2a; SET x1a = x1a-x2a; END IF;
 IF x1b > x2b THEN SET x1b = x2b+x1b; SET x2b = x1b-x2b; SET x1b = x1b-x2b; END IF;
