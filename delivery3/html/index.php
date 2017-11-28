@@ -31,10 +31,11 @@
     if ($show_table)
     {
         if (!isset($name)){
-            $result = tryQuery("SELECT * FROM patient");
+            $result = tryQuery("SELECT * FROM patient", []);
         } else {
             $name_arg = $name . "%";
-            $result = tryQuery("SELECT * FROM patient WHERE name LIKE ?", $name_arg);
+            $result = tryQuery("SELECT * FROM patient WHERE name LIKE :name",
+            	array(':name' => $name_arg));
         }
         
         if ($result){

@@ -66,32 +66,40 @@
 
     if ($filled)
     {
-        // TODO - Validate query
+        // TODO - Fix bug, not working correctly
         // Ensure the region belongs to a study with the correct request number
         $valid = tryQuery(
             "SELECT patient.name
             FROM patient, request, study, series
-            WHERE series.series_id = ?
-                AND request.number = ?
-                AND patient.number = ?
-                AND patient.number = request.patient_id", $series_id, $request_number, $patient_number);
+            WHERE series.series_id = :series_id
+                AND request.number = :request_number
+                AND patient.number = :patient_number
+                AND patient.number = request.patient_id",
+            array(  ':series_id' => $series_id, ':request_number' => $request_number,
+                    ':patient_number' => $patient_number)
+        );
 
         if ($valid !== false){
             $result = tryQuery(
                 "INSERT INTO region (series_id, elem_index, x1, y1, x2, y2) VALUES
-                (?, ?, ?, ?, ?, ?)", $series_id, $elem_index, $x1, $y1, $x2, $y2);
+                (:series_id, :elem_index, :x1, :y1, :x2, :y2)",
+                array(  ':series_id' => $series_id, ':elem_index' => $elem_index,
+                        ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
+            );
 
-            // TODO - Detect overlap - overlap is true if there exists an overlap
             $overlap = tryQuery(
                 "SELECT *  
                 FROM request,study,series,element, region
-                WHERE request.patient_id = ?
+                WHERE request.patient_id = :patient_number
                     AND request.number = study.request_number
                     AND request.number = series.request_number
                     AND study.description = series.description
                     AND region.series_id = series.series_id 
-                    AND region_overlaps_element(region.series_id, region.elem_index,?,?,?,?)
-                    ORDER BY study.date DESC LIMIT 1", $patient_number,$x1,$y1,$x2,$y2);
+                    AND region_overlaps_element( region.series_id, region.elem_index, :x1, :y1, :x2, :y2)
+                    ORDER BY study.date DESC LIMIT 1",
+                array(  ':patient_number' => $patient_number,
+                        ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
+            );
         }
     }
 

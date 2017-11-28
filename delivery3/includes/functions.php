@@ -50,8 +50,8 @@
      *
      * @throws     PDOException on failure
      *
-     * @param      string   $sql         The sql
-     * @param      array    $parameters  The parameters
+     * @param      string   $sql         The sql query
+     * @param      array    $parameters  The array of parameters
      *
      * @return     An array of all rows in result set or false on (non-fatal) error.
      */
@@ -61,7 +61,7 @@
         $handle = getDatabaseHandle();
 
         // prepare SQL statement
-        $statement = $handle->prepare($sql);
+        $statement = $handle->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
         if ($statement === false)
         {
             // Trigger error
@@ -86,14 +86,13 @@
     /**
      * Attempts performing a database query
      *
+     * @param      string   $sql            The sql query
+     * @param      array    $parameters     The array of parameters
+     *
      * @return     boolean  Whether the query was successful or not
      */
-    function tryQuery(/* $sql_query, $param1, $param2 ...*/)
+    function tryQuery($sql, $parameters)
     {
-        // SQL statement
-        $sql = func_get_arg(0);
-        // Get parameters, if any
-        $parameters = array_slice(func_get_args(), 1);
         try
         {
             return query($sql, $parameters);
@@ -123,7 +122,7 @@
             {
                 $sql = $request[0];
                 $parameters = (count($request) == 1)? [] : $request[1];
-                $statement = $handle->prepare($sql);
+                $statement = $handle->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
                 $results = $statement->execute($parameters);
             }
         }

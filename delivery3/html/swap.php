@@ -52,19 +52,24 @@
         // Close current period
         $update_period = [
             'UPDATE period NATURAL JOIN wears
-            SET end = ? WHERE snum = ? AND manuf = ?
-            AND timestampdiff(second, wears.end , current_timestamp) <= 0', [$date, $cur_serialnum, $cur_manufacturer]
+            SET end = :end WHERE snum = :snum AND manuf = :manuf
+                AND timestampdiff(second, wears.end , current_timestamp) <= 0',
+            array(':end' => $date, ':snum' => $cur_serialnum, ':manuf' => $cur_manufacturer)
         ];
 
         // Insert a new time period with undefined end
         $new_period = [
             'INSERT INTO period (start, end) VALUES
-            (?, "2999-12-31 00:00:00")', [$date]
+            (:start, :end)',
+            array(':start' => $date, ':end' => "2999-12-31 00:00:00")
         ];
 
         $new_wears = [
             'INSERT INTO wears (start, end, snum, manuf, patient) VALUES
-            (?, "2999-12-31 00:00:00", ?, ?, ?)', [$date, $serialnum, $manufacturer, $patient]
+            (:start, :end, :snum, :manuf, :patient)',
+            array(  ':start' => $date, ':end' => "2999-12-31 00:00:00", 
+                    ':snum' => $serialnum, ':manuf' => $manufacturer,
+                    ':patient' => $patient)
         ];
 
         $swap_result = transact([$update_period, $new_period, $new_wears]);
@@ -77,8 +82,9 @@
         $result = tryQuery(
             "SELECT serialnum, manufacturer, model
             FROM device
-            WHERE serialnum != ?
-                AND manufacturer = ?", $cur_serialnum, $cur_manufacturer);
+            WHERE serialnum != :snum AND manufacturer = :manuf",
+            array(':snum' => $cur_serialnum, ':manuf' => $cur_manufacturer)
+        );
 
         // Swap invisible form
         // The currently worn device is needed to generate the available devices table
