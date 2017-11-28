@@ -69,20 +69,22 @@
 
     if ($filled)
     {
-        // TODO - Fix bug, not working correctly
         // Ensure the region belongs to a study with the correct request number
         $valid = tryQuery(
             "SELECT patient.name
             FROM patient, request, study, series
             WHERE series.series_id = :series_id
-                AND request.number = :request_number
+                AND series.request_number = :request_number
                 AND patient.number = :patient_number
+                AND study.description = :description
                 AND patient.number = request.patient_id",
             array(  ':series_id' => $series_id, ':request_number' => $request_number,
-                    ':patient_number' => $patient_number)
+                    ':patient_number' => $patient_number, ':description' => $description)
         );
 
         if ($valid !== false){
+            
+            // Obtain request number of most recent study
             $query_req_number = tryQuery(
                 "SELECT request_number 
                 FROM study, request 
@@ -95,6 +97,7 @@
 
             if ($query_req_number !== false){
                 $req_numb = $query_req_number[0]['request_number'];
+
                 $overlap = tryQuery(
                     "SELECT *  
                     FROM study,series,region
