@@ -87,17 +87,13 @@
                         ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
             );
 
-            $query1 = tryQuery(
+            $req_numb = tryQuery(
                 "SELECT * 
                 FROM study,request 
                 WHERE study.request_number = request.number
                     AND request.patient = :patient_number
                     /*AND study.description = (description) - BORREGO METE AQUI UMA VARIÁVEL DE SEESÃO DA PAGINA ANTERIOR PARA TER A DESCRIPTION*/
                     ORDER BY study.date DESC LIMIT 1");
-
-            foreach($query1) as ($key){
-                $req_numb = $key['request_number'];
-            }
 
             $overlap = tryQuery(
                 "SELECT *  
