@@ -49,7 +49,6 @@
         if (!empty($_POST["description"])) {
             $description = $_POST["description"];
         }
-        // TODO - Error if missing?
 
         if (!empty($_POST["visited"])) {
             if (!isset($x1) || !isset($x2) || !isset($y1) || !isset($y2)) {
@@ -84,19 +83,23 @@
 
         if ($valid !== false){
             
-            // Obtain request number of most recent study
-            $query_req_number = tryQuery(
-                "SELECT request_number 
+            // Obtain primary key of most recent study
+            $query_most_recent = tryQuery(
+                "SELECT request_number, description 
                 FROM study, request 
                 WHERE study.request_number = request.number
                     AND request.patient_id = :patient_number
-                    AND study.description = :description
                     ORDER BY study.date DESC LIMIT 1",
-                array(':patient_number' => $patient_number, ':description' => $description)
+                array(':patient_number' => $patient_number)
             );
 
-            if ($query_req_number !== false){
-                $req_numb = $query_req_number[0]['request_number'];
+            if ($query_most_recent !== false){
+
+
+                // Most recent study request number
+                $recent_req_numb = $query_most_recent[0]['request_number'];
+                // Most recent study description
+                $recent_desc = $query_most_recent[0]['description'];
 
                 $overlap = tryQuery(
                     "SELECT *  
@@ -104,9 +107,9 @@
                     WHERE :req_numb = series.request_number
                         AND study.description = series.description
                         AND region.series_id = series.series_id
-                        AND study.description = :description
+                        AND study.description = :recent_description
                         AND region_overlaps_element(region.series_id, region.elem_index,:x1,:y1,:x2,:y2)",
-                    array('req_numb'=> $req_numb, ':description' => $description,
+                    array(	'req_numb'=> $recent_req_numb, 'recent_description' => $recent_desc,
                             ':x1' => $x1, ':y1' => $y1, ':x2' => $x2, ':y2' => $y2)
                 );
 
@@ -138,7 +141,7 @@
 
             <?php elseif ($result === false): ?>
             <div class="alert alert-danger">
-                <strong>Error!</strong> Could not insert region in database. Make sure the data element exists.
+                <strong>Error!</strong> Could not insert region in database.
             </div>
 
             <?php else: ?>
@@ -146,6 +149,7 @@
                 <strong>Success!</strong> Inserted region in database.
                 <?php if ($overlap): ?>
                 Overlap with previously acquired regions detected.
+                Request number, Description : <?=$recent_req_numb?>, <?=$recent_desc?>.
                 <?php else: ?>
                 No overlap with previously acquired regions detected: new clinical evidence.
                 <?php endif ?>
