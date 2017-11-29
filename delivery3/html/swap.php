@@ -82,8 +82,15 @@
         $result = tryQuery(
             "SELECT serialnum, manufacturer, model
             FROM device
-            WHERE serialnum != :snum AND manufacturer = :manuf",
-            array(':snum' => $cur_serialnum, ':manuf' => $cur_manufacturer)
+            WHERE NOT EXISTS (SELECT * 
+                                FROM wears
+                                WHERE wears.manuf = device.manufacturer
+                                AND wears.snum = device.serialnum
+                                AND wears.start < current_timestamp
+                                AND wears.end > current_timestamp)
+            AND device.Manufacturer = :manuf
+            AND device.serialnum != :snum" 
+            array(':manuf' => $cur_manufacturer,':snum' => $cur_serialnum)
         );
 
         if ($result){
