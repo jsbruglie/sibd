@@ -27,8 +27,9 @@
             WHERE patient.number = wears.patient
                 AND manufacturer = manuf
                 AND serialnum = snum
-                AND patient.number = ?
-                AND timestampdiff(second,wears.end,current_timestamp) <= 0", $id);
+                AND patient.number = :patient
+                AND timestampdiff(second,wears.end,current_timestamp) <= 0", 
+            array(':patient' => $id));
 
         if ($result){
 
@@ -67,11 +68,13 @@
         $result = tryQuery(
             "SELECT serialnum, manufacturer, model, start, end
             FROM wears, device, patient
-            WHERE patient.number = ?
+            WHERE patient.number = :patient
                 AND patient.number = wears.patient
                 AND manufacturer = manuf
                 AND serialnum = snum
-                AND timestampdiff(second,wears.end,current_timestamp) > 0", $id);
+                AND timestampdiff(second,wears.end,current_timestamp) > 0", 
+            array(':patient' => $id));
+
         if ($result){
             $old_dev_table = createTable($result,
                 [["Start", "start"],
@@ -87,8 +90,10 @@
         $result = tryQuery(
             "SELECT date, description, study.doctor_id, serial_number, manufacturer, request_number
             FROM study, request
-            WHERE request.patient_id = ?
-                AND request.number = study.request_number", $id);
+            WHERE request.patient_id = :patient_id
+                AND request.number = study.request_number",
+            array(':patient_id' => $id));
+
         if ($result){
 
             // Add region invisible form button
@@ -96,6 +101,7 @@
                 '<form action="region.php" method="post">' .
                 '<input type="hidden" name="patient_number" value="' . $id . '">' .
                 '<input type="hidden" name="request_number" value="$request_number">' .
+                '<input type="hidden" name="description" value="$description">' .
                 '<button type="submit" class="btn btn-sm btn-block btn-primary btn-space">Add region</button>' .
                 '</form>';
 

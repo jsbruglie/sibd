@@ -52,19 +52,24 @@
         // Close current period
         $update_period = [
             'UPDATE period NATURAL JOIN wears
-            SET end = ? WHERE snum = ? AND manuf = ?
-            AND timestampdiff(second, wears.end , current_timestamp) <= 0', [$date, $cur_serialnum, $cur_manufacturer]
+            SET end = :end WHERE snum = :snum AND manuf = :manuf
+                AND timestampdiff(second, wears.end , current_timestamp) <= 0',
+            array(':end' => $date, ':snum' => $cur_serialnum, ':manuf' => $cur_manufacturer)
         ];
 
         // Insert a new time period with undefined end
         $new_period = [
             'INSERT INTO period (start, end) VALUES
-            (?, "2999-12-31 00:00:00")', [$date]
+            (:start, :end)',
+            array(':start' => $date, ':end' => "2999-12-31 00:00:00")
         ];
 
         $new_wears = [
             'INSERT INTO wears (start, end, snum, manuf, patient) VALUES
-            (?, "2999-12-31 00:00:00", ?, ?, ?)', [$date, $serialnum, $manufacturer, $patient]
+            (:start, :end, :snum, :manuf, :patient)',
+            array(  ':start' => $date, ':end' => "2999-12-31 00:00:00", 
+                    ':snum' => $serialnum, ':manuf' => $manufacturer,
+                    ':patient' => $patient)
         ];
 
         $swap_result = transact([$update_period, $new_period, $new_wears]);
@@ -77,36 +82,50 @@
         $result = tryQuery(
             "SELECT serialnum, manufacturer, model
             FROM device
-            WHERE serialnum != ?
-                AND manufacturer = ?", $cur_serialnum, $cur_manufacturer);
-
-        // Swap invisible form
-        // The currently worn device is needed to generate the available devices table
-        $swap_btn =
-            '<form action="swap.php" method="post">' .
-            '<input type="hidden" name="start" value="' . $start . '">' .
-            '<input type="hidden" name="end" value="' . $end . '">' .
-            '<input type="hidden" name="patient" value="' . $patient . '">' .
-            '<input type="hidden" name="serialnum" value="$serialnum">' .
-            '<input type="hidden" name="manufacturer" value="$manufacturer">' .
-            '<input type="hidden" name="cur_serialnum" value="' . $cur_serialnum . '">' .
-            '<input type="hidden" name="cur_manufacturer" value="' . $cur_manufacturer . '">' .
-            '<button type="submit" class="btn btn-sm btn-block btn-primary">Swap</button>' .
-            '</form>';
-
-        $dev_table = createTable($result,
-            [["Serial number", "serialnum"],
-             ["Manufacturer","manufacturer"],
-             ["Product model","model"],
-             ["Actions","swap", $swap_btn]]
+            WHERE NOT EXISTS (SELECT * 
+                                FROM wears
+                                WHERE wears.manuf = device.manufacturer
+                                AND wears.snum = device.serialnum
+                                AND wears.start < current_timestamp
+                                AND wears.end > current_timestamp)
+            AND device.Manufacturer = :manuf
+            AND device.serialnum != :snum", 
+            array(':manuf' => $cur_manufacturer,':snum' => $cur_serialnum)
         );
+
+        if ($result){
+
+            // Swap invisible form
+            // The currently worn device is needed to generate the available devices table
+            $swap_btn =
+                '<form action="swap.php" method="post">' .
+                '<input type="hidden" name="start" value="' . $start . '">' .
+                '<input type="hidden" name="end" value="' . $end . '">' .
+                '<input type="hidden" name="patient" value="' . $patient . '">' .
+                '<input type="hidden" name="serialnum" value="$serialnum">' .
+                '<input type="hidden" name="manufacturer" value="$manufacturer">' .
+                '<input type="hidden" name="cur_serialnum" value="' . $cur_serialnum . '">' .
+                '<input type="hidden" name="cur_manufacturer" value="' . $cur_manufacturer . '">' .
+                '<button type="submit" class="btn btn-sm btn-block btn-primary">Swap</button>' .
+                '</form>';
+
+            $dev_table = createTable($result,
+                [["Serial number", "serialnum"],
+                 ["Manufacturer","manufacturer"],
+                 ["Product model","model"],
+                 ["Actions","swap", $swap_btn]]
+            );
+        }
     }
 
 ?>
 
         <div class="container">
 
-            <?php if (isset($dev_table)): ?>
+            <?php if (empty($result)): ?>
+            <h4>No devices available for replacement</h4>
+
+            <?php elseif (isset($dev_table)): ?>
             <h4>Choose an available device</h4>
             <?php echo $dev_table ?>
 

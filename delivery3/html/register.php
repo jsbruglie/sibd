@@ -22,20 +22,20 @@
 
     // Handle POST data
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        if (empty($_POST["name"])) {
-            $name_err = "Please insert the patient's name!";
-        } else {
+        if (!empty($_POST["name"])) {
             $name = $_POST["name"];
-        }
-        if (empty($_POST["birthday"])) {
-            $birthday_err = "Please insert the patient's birthday!";
         } else {
+            $name_err = "Please insert the patient's name!";
+        }
+        if (!empty($_POST["birthday"])) {
             $birthday = $_POST["birthday"];
-        }
-        if (empty($_POST["address"])) {
-            $address_err = "Please insert the patient's address!";
         } else {
+            $birthday_err = "Please insert the patient's birthday!";
+        }
+        if (!empty($_POST["address"])) {
             $address = $_POST["address"];
+        } else {
+            $address_err = "Please insert the patient's address!";
         }
     }
     $valid = !empty($name) && empty($name_err) &&
@@ -51,7 +51,9 @@
         // Add patient to DB (number is set to AI)
         $result = tryQuery(
             "INSERT INTO patient (number, name, birthday, address) VALUES
-            (NULL, ?, ?, ?)", $name, $birthday, $address);
+            (NULL, :name, :birthday, :address)",
+            array(':name' => $name, ':birthday' => $birthday, ':address' => $address)
+        );
     }
 
 ?>

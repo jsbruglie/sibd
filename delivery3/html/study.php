@@ -68,29 +68,37 @@
 
     if ($filled)
     {
-        // TODO - Also verify time periods? As in only able to add a study on a date within the wearing period
         // Ensure patient wearing device is the object of the provided study request
         $valid = tryQuery(
             "SELECT name
             FROM patient, request, device, wears
-            WHERE request.number = ?
-                AND wears.snum = ?
-                AND wears.manuf = ?
+            WHERE request.number = :request_number
+                AND wears.snum = :serialnum
+                AND wears.manuf = :manufacturer
                 AND patient.number = request.patient_id
-                AND wears.patient = patient.number", $request_number, $serialnum, $manufacturer);
+                AND wears.patient = patient.number",
+            array(  ':request_number' => $request_number, ':serialnum' => $serialnum,
+                    ':manufacturer' => $manufacturer)
+        );
 
         if ($valid){
             // SQL query to insert study
             $insert_study = [
                 'INSERT INTO study (request_number, description, date, doctor_id, serial_number, manufacturer) VALUES
-                    (?, ?, ?, ?, ?, ?)', [$request_number, $description, $date, $doctor_id, $serialnum, $manufacturer]
+                    (:request_number, :description, :date, :doctor_id, :serialnum, :manufacturer)',
+                array(  ':request_number' => $request_number, ':description' => $description,
+                        ':date' => $date, ':doctor_id' => $doctor_id, ':serialnum' => $serialnum,
+                        ':manufacturer' => $manufacturer)
             ];
 
             // SQL query to insert data series
             $base_url = "http://" . $_SERVER['SERVER_NAME'] . dirname($_SERVER['REQUEST_URI']) . "/series/" . $series_id;
             $insert_series = [
                 'INSERT INTO series (series_id, name, base_url, request_number, description) VALUES
-                    (?, ?, ?, ?, ?)', [$series_id, $series_name, $base_url, $request_number, $description]
+                    (:series_id, :name, :base_url, :request_number, :description)',
+                array(  ':series_id' => $series_id, ':name' => $series_name,
+                        ':base_url' => $base_url, ':request_number' => $request_number,
+                        ':description' => $description)
             ];
 
             // Perform transaction
