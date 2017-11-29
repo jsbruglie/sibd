@@ -89,7 +89,7 @@
                                 AND wears.start < current_timestamp
                                 AND wears.end > current_timestamp)
             AND device.Manufacturer = :manuf
-            AND device.serialnum != :snum" 
+            AND device.serialnum != :snum", 
             array(':manuf' => $cur_manufacturer,':snum' => $cur_serialnum)
         );
 
